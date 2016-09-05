@@ -1,0 +1,20 @@
+config INPUT_LPS25H
+	tristate "STMicroelectronics LPS25H sensor"
+	depends on (I2C || SPI) && SYSFS
+	select INPUT_LPS25H_I2C if (I2C)
+	select INPUT_LPS25H_SPI if (SPI)
+	help
+	   This driver support the STMicroelectronics LPS25H sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called lps25h.
+
+config INPUT_LPS25H_I2C
+	tristate
+	depends on INPUT_LPS25H
+	depends on I2C
+
+config INPUT_LPS25H_SPI
+	tristate
+	depends on INPUT_LPS25H
+	depends on SPI

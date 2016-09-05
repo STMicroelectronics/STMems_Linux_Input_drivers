@@ -1,0 +1,9 @@
+
+menuconfig INPUT_MAGN
+	tristate "magnetometer"
+
+if INPUT_MAGN
+
+source "drivers/input/misc/st/magnetometer/lis3mdl/Kconfig"
+
+endif # INPUT_MAGN

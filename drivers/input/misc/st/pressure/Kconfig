@@ -1,0 +1,9 @@
+menuconfig INPUT_PRESSURE
+	tristate "Pressure"
+
+if INPUT_PRESSURE
+
+source "drivers/input/misc/st/pressure/lps22hb/Kconfig"
+source "drivers/input/misc/st/pressure/lps25h/Kconfig"
+
+endif # INPUT_PRESSURE

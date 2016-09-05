@@ -1,0 +1,14 @@
+config INPUT_N2DM
+	tristate "STMicroelectronics N2DM sensor"
+	depends on I2C && SYSFS
+	select INPUT_N2DM_I2C if (I2C)
+	help
+	   This driver support the STMicroelectronics N2DM sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called n2dm.
+
+config INPUT_N2DM_I2C
+	tristate
+	depends on INPUT_N2DM
+	depends on I2C

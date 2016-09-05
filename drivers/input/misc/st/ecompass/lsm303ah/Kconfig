@@ -1,0 +1,18 @@
+config INPUT_LSM303AH
+         tristate "STM LSM303AH sensor"
+         depends on (I2C || SPI) && SYSFS
+	 select INPUT_LSM303AH_I2C if (I2C)
+	 select INPUT_LSM303AH_SPI if (SPI)
+         help
+           This driver support the STMicroelectronics LSM303AH sensor.
+
+config INPUT_LSM303AH_I2C
+         tristate
+         depends on INPUT_LSM303AH
+         depends on I2C
+
+config INPUT_LSM303AH_SPI
+         tristate
+         depends on INPUT_LSM303AH
+         depends on SPI
+
