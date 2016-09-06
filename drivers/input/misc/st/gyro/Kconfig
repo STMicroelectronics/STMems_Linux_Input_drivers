@@ -1,0 +1,12 @@
+
+menuconfig INPUT_GYRO
+	tristate "Gyroscope"
+
+if INPUT_GYRO
+
+source "drivers/input/misc/st/gyro/l3g4200d/Kconfig"
+source "drivers/input/misc/st/gyro/l3gd20/Kconfig"
+source "drivers/input/misc/st/gyro/l3gd20h/Kconfig"
+source "drivers/input/misc/st/gyro/a3g4250d/Kconfig"
+
+endif # INPUT_GYRO

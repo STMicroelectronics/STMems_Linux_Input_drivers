@@ -1,0 +1,20 @@
+config INPUT_H3LIS331DL
+	tristate "STMicroelectronics H3LIS331DL sensor"
+	depends on (I2C || SPI) && SYSFS
+	select INPUT_H3LIS331DL_I2C if (I2C)
+	select INPUT_H3LIS331DL_SPI if (SPI)
+	help
+	   This driver support the STMicroelectronics H3LIS331DL sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called h3lis331dl.
+
+config INPUT_H3LIS331DL_I2C
+	tristate
+	depends on INPUT_H3LIS331DL
+	depends on I2C
+
+config INPUT_H3LIS331DL_SPI
+	tristate
+	depends on INPUT_H3LIS331DL
+	depends on SPI

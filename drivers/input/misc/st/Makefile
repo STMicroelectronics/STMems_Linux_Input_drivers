@@ -1,0 +1,8 @@
+obj-$(CONFIG_INPUT_ECOMPASS) += ecompass/
+obj-$(CONFIG_INPUT_IMU) += imu/
+obj-$(CONFIG_INPUT_ACC) += acc/
+obj-$(CONFIG_INPUT_HUMIDITY) += humidity/
+obj-$(CONFIG_INPUT_GYRO) += gyro/
+obj-$(CONFIG_INPUT_MAGN) += magnetometer/
+obj-$(CONFIG_INPUT_PRESSURE) += pressure/
+obj-$(CONFIG_INPUT_UV) += uv/

@@ -590,4 +590,6 @@ config INPUT_XEN_KBDDEV_FRONTEND
 	  To compile this driver as a module, choose M here: the
 	  module will be called xen-kbdfront.
 
+source "drivers/input/misc/st/Kconfig"
+
 endif

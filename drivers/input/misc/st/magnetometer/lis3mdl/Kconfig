@@ -1,0 +1,22 @@
+
+config INPUT_LIS3MDL
+         tristate "STM LIS3MDL sensor"
+         depends on (I2C || SPI) && SYSFS
+	 select INPUT_LIS3MDL_I2C if (I2C)
+	 select INPUT_LIS3MDL_SPI if (SPI)
+         help
+           This driver support the STMicroelectronics LIS3MDL sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called lis3mdl.
+
+config INPUT_LIS3MDL_I2C
+         tristate
+         depends on INPUT_LIS3MDL
+         depends on I2C
+
+config INPUT_LIS3MDL_SPI
+         tristate
+         depends on INPUT_LIS3MDL
+         depends on SPI
+

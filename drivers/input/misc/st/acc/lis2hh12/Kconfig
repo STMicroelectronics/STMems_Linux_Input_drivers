@@ -1,0 +1,20 @@
+config INPUT_LIS2HH12
+	tristate "STMicroelectronics LIS2HH12 sensor"
+	depends on (I2C || SPI) && SYSFS
+	select INPUT_LIS2HH12_I2C if (I2C)
+	select INPUT_LIS2HH12_SPI if (SPI)
+	help
+	   This driver support the STMicroelectronics LIS2HH12 sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called lis2hh12.
+
+config INPUT_LIS2HH12_I2C
+	tristate
+	depends on INPUT_LIS2HH12
+	depends on I2C
+
+config INPUT_LIS2HH12_SPI
+	tristate
+	depends on INPUT_LIS2HH12
+	depends on SPI
