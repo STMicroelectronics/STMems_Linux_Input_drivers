@@ -1,0 +1,13 @@
+/* STMicroelectronics lis2mdl magnetometer sensor */
+
+Required properties:
+	- compatible : should be "st,lis2mdl"
+	- reg : the I2C address of the sensor
+
+
+Example:
+
+lis2mdl@1e {
+	compatible = "st,lis2mdl";
+	reg = <0x1e>;
+};
