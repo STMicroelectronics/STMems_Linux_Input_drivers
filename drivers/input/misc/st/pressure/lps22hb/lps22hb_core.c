@@ -655,7 +655,7 @@ static ssize_t attr_set_autozero(struct device *dev,
 		return err;
 	}
 
-	prs->resume_state[INT_CFG_REG] = init_val;
+	prs->resume_state[RES_INT_CFG_REG] = init_val;
 	updated_val = ((AUTOZ_MASK & (((u8)val) << 5)) |
 		       ((~AUTOZ_MASK) & init_val));
 	err = prs->tf->write(prs, INT_CFG_REG, 1, &updated_val);
@@ -690,7 +690,7 @@ static ssize_t attr_reset_autozero(struct device *dev,
 	}
 
 	init_val = snsdata[0];
-	prs->resume_state[INT_CFG_REG] = init_val;
+	prs->resume_state[RES_INT_CFG_REG] = init_val;
 
 	updated_val = ((RESET_AZ_MASK & (((u8)val)<<4)) |
 		       ((~RESET_AZ_MASK) & init_val));
@@ -727,7 +727,7 @@ static ssize_t attr_set_autorifp(struct device *dev,
 	}
 
 	init_val = snsdata[0];
-	prs->resume_state[INT_CFG_REG] = init_val;
+	prs->resume_state[RES_INT_CFG_REG] = init_val;
 	updated_val = ((AUTORIFP_MASK & (((u8)val) << 7)) |
 		       ((~AUTORIFP_MASK) & init_val));
 	err = prs->tf->write(prs, INT_CFG_REG, 1, &updated_val);
@@ -763,7 +763,7 @@ static ssize_t attr_reset_autorifp(struct device *dev,
 	}
 
 	init_val = snsdata[0];
-	prs->resume_state[INT_CFG_REG] = init_val;
+	prs->resume_state[RES_INT_CFG_REG] = init_val;
 
 	updated_val = ((RESET_ARP_MASK & (((u8)val) << 6)) |
 		       ((~RESET_ARP_MASK) & init_val));
@@ -795,10 +795,9 @@ static ssize_t attr_set_pthreshold(struct device *dev,
 	snsdata[1] = (((u16)val) >> 8) & 0xFF;
 	err = prs->tf->write(prs, THS_P_L, 2, snsdata);
 
-
-    if (err >= 0) {
-		prs->resume_state[RES_THS_P_L] = snsdata[1];
-        prs->resume_state[RES_THS_P_H] = snsdata[2];
+	if (err >= 0) {
+		prs->resume_state[RES_THS_P_L] = snsdata[0];
+		prs->resume_state[RES_THS_P_H] = snsdata[1];
 	}
 
 	mutex_unlock(&prs->lock);
@@ -807,7 +806,7 @@ static ssize_t attr_set_pthreshold(struct device *dev,
 
 #ifdef DEBUG
 	printk("LPS22HB new pressure threshold setting : %d \r\n",
-	       (((u16)snsdata[2]) << 8) + (u16)(snsdata[1]));
+	       (((u16)snsdata[1]) << 8) + (u16)(snsdata[0]));
 #endif
 
 	return size;
@@ -854,7 +853,7 @@ static ssize_t attr_set_pthreshold_enable(struct device *dev,
 	}
 
 	init_val = snsdata[0];
-	prs->resume_state[INT_CFG_REG] = init_val;
+	prs->resume_state[RES_INT_CFG_REG] = init_val;
 
 	updated_val = ((~mask) & init_val);
 	if (val == 1)
