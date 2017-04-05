@@ -31,7 +31,7 @@ This repository contains Linux kernel (v3.10, v3.4) with STMicroelectronics MEMS
 
 ### Magnetometer:
 
-> lis3mdl
+> lis3mdl, lis2mdl
 
 ### Humidity:
 
