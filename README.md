@@ -23,7 +23,7 @@ This repository contains Linux kernel (v3.10, v3.4) with STMicroelectronics MEMS
 
 > ais328dq, ais3624dq, h3lis100dl, h3lis331dl, lis2de,
 > lis2dh, lis2ds12, lis2hh12, lis331dlh,
-> lis331hh, lis3de, lis3dh, lis3dsh
+> lis331hh, lis3de, lis3dh, lis3dsh, lis2dw12
 
 ### Gyroscope:
 
