@@ -125,6 +125,8 @@ struct lis2hh12_status {
 	struct hrtimer hr_timer_poll;
 	ktime_t polling_ktime;
 	struct workqueue_struct *hr_timer_poll_work_queue;
+	s64 timestamp;
+	u8 sample_to_discard;
 	struct input_dev *input_dev;
 	int hw_initialized;
 	/* hw_working=-1 means not tested yet */

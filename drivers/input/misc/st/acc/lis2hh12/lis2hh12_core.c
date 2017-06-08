@@ -212,6 +212,15 @@ struct {
 #endif
 };
 
+static inline int64_t lis2hh12_acc_get_time_ns(void)
+{
+	struct timespec ts;
+
+	get_monotonic_boottime(&ts);
+
+	return timespec_to_ns(&ts);
+}
+
 static int int1_gpio = LIS2HH12_ACC_DEFAULT_INT1_GPIO;
 static int int2_gpio = LIS2HH12_ACC_DEFAULT_INT2_GPIO;
 
@@ -546,11 +555,15 @@ static int lis2hh12_acc_get_data(struct lis2hh12_status *stat, int *xyz)
 }
 
 static void lis2hh12_acc_report_values(struct lis2hh12_status *stat,
-				       int *xyz)
+				       int *xyz, int64_t timestamp)
 {
 	input_event(stat->input_dev, INPUT_EVENT_TYPE, INPUT_EVENT_X, xyz[0]);
 	input_event(stat->input_dev, INPUT_EVENT_TYPE, INPUT_EVENT_Y, xyz[1]);
 	input_event(stat->input_dev, INPUT_EVENT_TYPE, INPUT_EVENT_Z, xyz[2]);
+	input_event(stat->input_dev, INPUT_EVENT_TYPE, INPUT_EVENT_TIME_MSB,
+		    timestamp >> 32);
+	input_event(stat->input_dev, INPUT_EVENT_TYPE, INPUT_EVENT_TIME_LSB,
+		    timestamp & 0xffffffff);
 	input_sync(stat->input_dev);
 }
 
@@ -562,8 +575,14 @@ static void lis2hh12_acc_report_triple(struct lis2hh12_status *stat)
 	err = lis2hh12_acc_get_data(stat, xyz);
 	if (err < 0)
 		dev_err(stat->dev, "get_data failed\n");
-	else
-		lis2hh12_acc_report_values(stat, xyz);
+	else {
+		if (stat->sample_to_discard) {
+			stat->sample_to_discard--;
+			return;
+		}
+
+		lis2hh12_acc_report_values(stat, xyz, stat->timestamp);
+	}
 }
 
 static irqreturn_t lis2hh12_acc_isr1(int irq, void *dev)
@@ -620,6 +639,8 @@ static int lis2hh12_acc_enable(struct lis2hh12_status *stat)
 			atomic_set(&stat->enabled, 0);
 			return err;
 		}
+		/* Dischard first samples. */
+		stat->sample_to_discard = 10;
 		stat->polling_ktime = ktime_set(stat->pdata->poll_interval / 1000,
 				MS_TO_NS(stat->pdata->poll_interval % 1000));
 		hrtimer_start(&stat->hr_timer_poll,
@@ -978,17 +999,24 @@ static int remove_sysfs_interfaces(struct device *dev)
 static void lis2hh12_acc_input_poll_work_func(struct work_struct *work)
 {
 	struct lis2hh12_status *stat;
+	ktime_t tmpkt, ktdelta;
 
 	stat = container_of((struct work_struct *) work,
 			    struct lis2hh12_status, input_poll_work);
 
-	mutex_lock(&stat->lock);
-	lis2hh12_acc_report_triple(stat);
-	mutex_unlock(&stat->lock);
+	if (atomic_read(&stat->enabled)) {
+		/* Adjust new timeout. */
+		ktdelta = ktime_set(0, lis2hh12_acc_get_time_ns() - stat->timestamp);
+		/* Avoid negative value in case of High ODR. */
+		if (stat->polling_ktime.tv64 > ktdelta.tv64)
+			tmpkt = ktime_sub(stat->polling_ktime, ktdelta);
+		else
+			tmpkt = stat->polling_ktime;
 
-	if (atomic_read(&stat->enabled))
-		hrtimer_start(&stat->hr_timer_poll, stat->polling_ktime,
-			      HRTIMER_MODE_REL);
+		hrtimer_start(&stat->hr_timer_poll, tmpkt, HRTIMER_MODE_REL);
+	}
+
+	lis2hh12_acc_report_triple(stat);
 }
 
 enum hrtimer_restart lis2hh12_acc_hr_timer_poll_function(struct hrtimer *timer)
@@ -997,6 +1025,8 @@ enum hrtimer_restart lis2hh12_acc_hr_timer_poll_function(struct hrtimer *timer)
 
 	stat = container_of((struct hrtimer *)timer,
 			    struct lis2hh12_status, hr_timer_poll);
+
+	stat->timestamp = lis2hh12_acc_get_time_ns();
 
 	queue_work(stat->hr_timer_poll_work_queue, &stat->input_poll_work);
 
@@ -1092,6 +1122,8 @@ static int lis2hh12_acc_input_init(struct lis2hh12_status *stat)
 	__set_bit(INPUT_EVENT_X, stat->input_dev->mscbit);
 	__set_bit(INPUT_EVENT_Y, stat->input_dev->mscbit);
 	__set_bit(INPUT_EVENT_Z, stat->input_dev->mscbit);
+	__set_bit(INPUT_EVENT_TIME_MSB, stat->input_dev->mscbit);
+	__set_bit(INPUT_EVENT_TIME_LSB, stat->input_dev->mscbit);
 
 	err = input_register_device(stat->input_dev);
 	if (err) {
