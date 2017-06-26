@@ -180,6 +180,7 @@ MODULE_DEVICE_TABLE(i2c, lps25h_ids);
 #ifdef CONFIG_OF
 static const struct of_device_id lps25h_id_table[] = {
 	{ .compatible = "st,lps25h", },
+	{ .compatible = "st,lps25hb", },
 	{ },
 };
 MODULE_DEVICE_TABLE(of, lps25h_id_table);
