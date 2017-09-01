@@ -1,0 +1,14 @@
+config INPUT_LIS3DHH
+	tristate "STMicroelectronics LIS3DHH sensor"
+	depends on SPI && SYSFS
+	select INPUT_LIS3DHH_SPI if (SPI)
+	help
+	   This driver support the STMicroelectronics LIS3DHH sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called lis3dhh.
+
+config INPUT_LIS3DHH_SPI
+	tristate
+	depends on INPUT_LIS3DHH
+	depends on SPI

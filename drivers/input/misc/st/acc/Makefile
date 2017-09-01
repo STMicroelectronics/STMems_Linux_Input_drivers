@@ -16,3 +16,4 @@ obj-$(CONFIG_INPUT_LIS331HH) += lis331hh/
 obj-$(CONFIG_INPUT_H3LIS331DL) += h3lis331dl/
 obj-$(CONFIG_INPUT_LIS3DH) += lis3dh/
 obj-$(CONFIG_INPUT_LIS2DW12) += lis2dw12/
+obj-$(CONFIG_INPUT_LIS3DHH) += lis3dhh/

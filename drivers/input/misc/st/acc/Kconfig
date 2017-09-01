@@ -18,5 +18,6 @@ source "drivers/input/misc/st/acc/lis331hh/Kconfig"
 source "drivers/input/misc/st/acc/h3lis331dl/Kconfig"
 source "drivers/input/misc/st/acc/lis3dh/Kconfig"
 source "drivers/input/misc/st/acc/lis2dw12/Kconfig"
+source "drivers/input/misc/st/acc/lis3dhh/Kconfig"
 
 endif # INPUT_ACC
