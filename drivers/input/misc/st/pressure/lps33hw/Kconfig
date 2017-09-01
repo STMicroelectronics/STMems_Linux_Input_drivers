@@ -1,0 +1,23 @@
+
+config INPUT_LPS33HW
+	tristate "STMicroelectronics LPS33HW/LPS35HW sensor"
+	depends on (I2C || SPI) && SYSFS
+	select INPUT_LPS33HW_I2C if (I2C)
+	select INPUT_LPS33HW_SPI if (SPI)
+	help
+	   Say yes here to build support for STMicroelectronics pressure:
+	   LPS33HW, LPS35HW.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called lps33hw.
+
+config INPUT_LPS33HW_I2C
+	tristate
+	depends on INPUT_LPS33HW
+	depends on I2C
+
+config INPUT_LPS33HW_SPI
+	tristate
+	depends on INPUT_LPS33HW
+	depends on SPI
+

@@ -39,7 +39,7 @@ This repository contains Linux kernel (v3.10, v3.4) with STMicroelectronics MEMS
 
 ### Pressure:
 
-> LPS22HB, LPS25H, LPS25HB
+> LPS22HB, LPS25H, LPS25HB, LPS33HW, LPS35HW
 
 ### Ultraviolet:
 
