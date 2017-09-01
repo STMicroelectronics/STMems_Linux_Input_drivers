@@ -1,54 +1,12 @@
 /*
-* STMicroelectronics lps22hb driver
-*
-* Copyright 2016 STMicroelectronics Inc.
-*
-* Authors: HESA BU - Application Team
-*        : Adalberto Muhuho (adalberto.muhuho@st.com)
-*        : Mario Tesi (mario.tesi@st.com)
-* 
-* The structure of this driver is based on reference code previously
-* delivered by Lorenzo Sarchi
-*
-* Version: 0.0.3
-* Date: 2016/May/16
-*
-********************************************************************************
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License version 2 as
-* published by the Free Software Foundation.
-*
-* THE PRESENT SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES
-* OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, FOR THE SOLE
-* PURPOSE TO SUPPORT YOUR APPLICATION DEVELOPMENT.
-* AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT,
-* INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE
-* CONTENT OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING
-* INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-*
-********************************************************************************
-*
-* Read pressures and temperatures output can be converted in units of
-* measurement by dividing them respectively for SENSITIVITY_P and SENSITIVITY_T.
-* Temperature values must then be added by the constant float TEMPERATURE_OFFSET
-* expressed as Celsius degrees.
-*
-* Obtained values are then expessed as
-* mbar (=0.1 kPa) and Celsius degrees.
-*
-*/
-/******************************************************************************
- Revision history:
-
- Revision 0.0.1 2015/Dec/11: 1st beta version
-
- Revision 0.0.2 2016/Apr/19:
-	Revision 0.0.2 downgrades previous License to GPLv2
-
- Revision 0.0.2 2016/May/16:
-	Added SPI support
-******************************************************************************/
+ * STMicroelectronics lps33hw driver
+ *
+ * Copyright 2017 STMicroelectronics Inc.
+ *
+ * Mario Tesi <mario.tesi@st.com>
+ *
+ * Licensed under the GPL-2.
+ */
 
 #include <linux/module.h>
 #include <linux/err.h>
@@ -65,7 +23,7 @@
 #include <linux/version.h>
 #include <linux/pm.h>
 
-#include "lps22hb.h"
+#include "lps33hw.h"
 
 #define	PR_ABS_MAX	8388607		/* 24 bit 2'compl */
 #define	PR_ABS_MIN	-8388608
@@ -78,7 +36,7 @@
 #endif
 
 /* Device ID */
-#define	WHOAMI_LPS22_PRS	0xB1
+#define	WHOAMI_LPS33_PRS	0xB1
 
 /*	REGISTERS */
 #define	INT_CFG_REG		0x0B	/* interrupt config reg */
@@ -174,7 +132,7 @@ static u8 hex_measr_logging;
 static const struct {
 	unsigned int cutoff_ms;
 	unsigned int mask;
-} lps22_prs_odr_table[] = {
+} lps33_prs_odr_table[] = {
 	{ 13, ODR_75_75 },
 	{ 20, ODR_50_50 },
 	{ 40, ODR_25_25 },
@@ -187,20 +145,20 @@ struct outputdata {
 	s16 temperature;
 };
 
-static const struct lps22_prs_platform_data default_lps22_pdata = {
+static const struct lps33_prs_platform_data default_lps33_pdata = {
 	.poll_interval = 1000,
-	.min_interval = LPS22_PRS_MIN_POLL_PERIOD_MS,
+	.min_interval = LPS33_PRS_MIN_POLL_PERIOD_MS,
 };
 
 static u8 snsdata[3];
 
-static int lps22_prs_hw_init(struct lps22_prs_data *prs)
+static int lps33_prs_hw_init(struct lps33_prs_data *prs)
 {
 	int err;
 	u8 buf[6];
 
-	pr_info("%s: hw init start\n", LPS22_PRS_DEV_NAME);
-	dev_dbg(prs->dev,"%s: hw init start\n", LPS22_PRS_DEV_NAME);
+	pr_info("%s: hw init start\n", LPS33_PRS_DEV_NAME);
+	dev_dbg(prs->dev,"%s: hw init start\n", LPS33_PRS_DEV_NAME);
 
 	buf[0] = prs->resume_state[RES_REF_P_XL];
 	buf[1] = prs->resume_state[RES_REF_P_L];
@@ -210,20 +168,20 @@ static int lps22_prs_hw_init(struct lps22_prs_data *prs)
 	if (err < 0)
 		goto err_resume_state;
 		
-	printk("hw_init: REF_P pass \r\n");
+	dev_dbg(prs->dev, "hw_init: REF_P pass \r\n");
 	buf[0] = prs->resume_state[RES_RESOL_CONF];
 	err = prs->tf->write(prs, RESOL_CONF, 1, buf);
 	if (err < 0)
 		goto err_resume_state;
 
-	printk("hw_init: RESOL_CONF pass \r\n");
+	dev_dbg(prs->dev, "hw_init: RESOL_CONF pass \r\n");
 	buf[0] = prs->resume_state[RES_THS_P_L];
 	buf[1] = prs->resume_state[RES_THS_P_H];
 	err = prs->tf->write(prs, P_THS_INDATA_REG, 2, buf);
 	if (err < 0)
 		goto err_resume_state;
 #ifdef DEBUG
-	printk("hw_init: P_THS_INDATA_REG pass \r\n");
+	dev_dbg(prs->dev, "hw_init: P_THS_INDATA_REG pass \r\n");
 #endif
 
  	buf[0] = (prs->resume_state[RES_CTRL_REG2]) | 0x10;
@@ -233,7 +191,7 @@ static int lps22_prs_hw_init(struct lps22_prs_data *prs)
 	if (err < 0)
 		goto err_resume_state;
 #ifdef DEBUG
-	printk("hw_init: P_CTRL_REGS23 pass \r\n");
+	dev_dbg(prs->dev, "hw_init: P_CTRL_REGS23 pass \r\n");
 #endif
 
 	buf[0] = prs->resume_state[RES_INT_CFG_REG];
@@ -241,7 +199,7 @@ static int lps22_prs_hw_init(struct lps22_prs_data *prs)
 	if (err < 0)
 		goto err_resume_state;
 #ifdef DEBUG
-	printk("hw_init: INT_CFG_REG pass \r\n");
+	dev_dbg(prs->dev, "hw_init: INT_CFG_REG pass \r\n");
 #endif
 
 	buf[0] = prs->resume_state[RES_CTRL_REG1];
@@ -249,13 +207,13 @@ static int lps22_prs_hw_init(struct lps22_prs_data *prs)
 	if (err < 0)
 		goto err_resume_state;
 #ifdef DEBUG
-	printk("hw_init: CTRL_REG1 pass \r\n");
+	dev_dbg(prs->dev, "hw_init: CTRL_REG1 pass \r\n");
 #endif
 
 	prs->hw_initialized = 1;
 
-	pr_info("%s: hw init done\n", LPS22_PRS_DEV_NAME);
-	dev_dbg(prs->dev, "%s: hw init done\n", LPS22_PRS_DEV_NAME);
+	pr_info("%s: hw init done\n", LPS33_PRS_DEV_NAME);
+	dev_dbg(prs->dev, "%s: hw init done\n", LPS33_PRS_DEV_NAME);
 
 	return 0;
 
@@ -266,7 +224,7 @@ err_resume_state:
 	return err;
 }
 
-static void lps22_prs_device_power_off(struct lps22_prs_data *prs)
+static void lps33_prs_device_power_off(struct lps33_prs_data *prs)
 {
 	int err;
 	u8 buf[5];
@@ -302,7 +260,7 @@ static void lps22_prs_device_power_off(struct lps22_prs_data *prs)
 	prs->hw_initialized = 0;
 }
 
-int lps22_prs_update_odr(struct lps22_prs_data *prs, int poll_period_ms)
+int lps33_prs_update_odr(struct lps33_prs_data *prs, int poll_period_ms)
 {
 	int err = -1;
 	int i;
@@ -314,26 +272,27 @@ int lps22_prs_update_odr(struct lps22_prs_data *prs, int poll_period_ms)
 	 * odr_table vector from the end (longest period) backward (shortest
 	 * period), to support the poll_interval requested by the system.
 	 * It must be the longest period shorter then the set poll period.*/
-	for (i = ARRAY_SIZE(lps22_prs_odr_table) - 1; i >= 0; i--) {
+	for (i = ARRAY_SIZE(lps33_prs_odr_table) - 1; i >= 0; i--) {
 #ifdef DEBUG
-		printk("poll period tab index %d \r\n",i);
-		printk("poll period tab cutoff %d \r\n",lps22_prs_odr_table[i].cutoff_ms);
-		printk("poll period tab mask %02x \r\n",lps22_prs_odr_table[i].mask);
+		dev_dbg(prs->dev, "poll period tab index %d \r\n", i);
+		dev_dbg(prs->dev, "poll period tab cutoff %d \r\n",
+                lps33_prs_odr_table[i].cutoff_ms);
+		dev_dbg(prs->dev, "poll period tab mask %02x \r\n",
+                lps33_prs_odr_table[i].mask);
 #endif
-		if ((lps22_prs_odr_table[i].cutoff_ms <= poll_period_ms) ||
+		if ((lps33_prs_odr_table[i].cutoff_ms <= poll_period_ms) ||
 		    (i == 0))
 			break;
 	}
 
 #ifdef DEBUG
-	printk("\r\n");
-	printk("new poll period setting: %d \r\n",poll_period_ms);
+	dev_dbg(prs->dev, "new poll period setting: %d \r\n", poll_period_ms);
 #endif
 
-	new_val = lps22_prs_odr_table[i].mask;
+	new_val = lps33_prs_odr_table[i].mask;
 
 #ifdef DEBUG
-	printk("new ODR bits: %02x \r\n",new_val);
+	dev_dbg(prs->dev, "new ODR bits: %02x \r\n", new_val);
 #endif
 
 	/* before to change the ODR it is mandatory to power down
@@ -354,7 +313,8 @@ int lps22_prs_update_odr(struct lps22_prs_data *prs, int poll_period_ms)
 
 	/* set new ODR*/
 	buf[0] = CTRL_REG1;
-	updated_val = ((ODR_MASK & new_val) | ((~ODR_MASK) & curr_val) | BDU_MASK);
+	updated_val = ((ODR_MASK & new_val) |
+		       ((~ODR_MASK) & curr_val) | BDU_MASK);
 
 	err = prs->tf->write(prs, CTRL_REG1, 1, &updated_val);
 	if (err < 0)
@@ -362,7 +322,7 @@ int lps22_prs_update_odr(struct lps22_prs_data *prs, int poll_period_ms)
 
 	prs->resume_state[RES_CTRL_REG1] = updated_val;
 
-	prs->delta_ts = ktime_set(0, 1000000 * lps22_prs_odr_table[i].cutoff_ms);
+	prs->delta_ts = ktime_set(0, 1000000 * lps33_prs_odr_table[i].cutoff_ms);
 
 	return err;
 
@@ -373,7 +333,7 @@ error:
 	return err;
 }
 
-static int lps22_prs_device_power_on(struct lps22_prs_data *prs)
+static int lps33_prs_device_power_on(struct lps33_prs_data *prs)
 {
 	int err = -1;
 
@@ -387,10 +347,10 @@ static int lps22_prs_device_power_on(struct lps22_prs_data *prs)
 	}
 
 	if (!prs->hw_initialized) {
-		err = lps22_prs_hw_init(prs);
-		lps22_prs_update_odr(prs, prs->pdata->poll_interval);
+		err = lps33_prs_hw_init(prs);
+		lps33_prs_update_odr(prs, prs->pdata->poll_interval);
 		if (prs->hw_working == 1 && err < 0) {
-			lps22_prs_device_power_off(prs);
+			lps33_prs_device_power_off(prs);
 			return err;
 		}
 	}
@@ -398,7 +358,7 @@ static int lps22_prs_device_power_on(struct lps22_prs_data *prs)
 	return 0;
 }
 
-static int lps22_prs_set_press_reference(struct lps22_prs_data *prs,
+static int lps33_prs_set_press_reference(struct lps33_prs_data *prs,
 					 s32 new_reference)
 {
 	int err;
@@ -422,7 +382,7 @@ static int lps22_prs_set_press_reference(struct lps22_prs_data *prs,
 	prs->resume_state[RES_REF_P_H] = bit_valuesH;
 
 #ifdef DEBUG
-	printk("LPS22HB new reference pressure setting : %d \r\n",
+	dev_dbg(prs->dev, "new reference pressure setting : %d \r\n",
 	       (((u32)bit_valuesH) << 16) +
 	       (((u32)bit_valuesL) << 8) + ((u32)(bit_valuesXL)));
 #endif
@@ -430,7 +390,7 @@ static int lps22_prs_set_press_reference(struct lps22_prs_data *prs,
 	return err;
 }
 
-static int lps22_prs_get_press_reference(struct lps22_prs_data *prs,
+static int lps33_prs_get_press_reference(struct lps33_prs_data *prs,
 					 s32 *buf32)
 {
 	int err;
@@ -449,12 +409,12 @@ static int lps22_prs_get_press_reference(struct lps22_prs_data *prs,
 	temp = (bit_valuesH << 8 ) | bit_valuesL;
 	*buf32 = (s32)((((s16)temp) << 8) | bit_valuesXL);
 #ifdef DEBUG
-	dev_dbg(prs->dev,"%s val: %+d", LPS22_PRS_DEV_NAME, *buf32 );
+	dev_dbg(prs->dev, "%s val: %+d", LPS33_PRS_DEV_NAME, *buf32 );
 #endif
 	return err;
 }
 
-static int lps22_prs_get_presstemp_data(struct lps22_prs_data *prs,
+static int lps33_prs_get_presstemp_data(struct lps33_prs_data *prs,
 					struct outputdata *out)
 {
 	int err;
@@ -470,7 +430,7 @@ static int lps22_prs_get_presstemp_data(struct lps22_prs_data *prs,
 
 #ifdef DEBUG
     if (hex_measr_logging)
-		printk("temp out tH = 0x%02x, tL = 0x%02x,"
+		dev_dbg(prs->dev, "temp out tH = 0x%02x, tL = 0x%02x,"
 			"press_out: pH = 0x%02x, pL = 0x%02x, pXL= 0x%02x\n",
 			prs_data[4], prs_data[3], prs_data[2], prs_data[1],
 			prs_data[0]);
@@ -482,7 +442,7 @@ static int lps22_prs_get_presstemp_data(struct lps22_prs_data *prs,
 
 #ifdef DEBUG
 	if ((decimator_count%logout_decimation) == 0)
-		printk("%d \n", (int32_t)pressure);
+		dev_dbg(prs->dev, "%d \n", (int32_t)pressure);
 	decimator_count++;
 #endif
 
@@ -492,20 +452,22 @@ static int lps22_prs_get_presstemp_data(struct lps22_prs_data *prs,
 	return err;
 }
 
-static void lps22_prs_report_values(struct lps22_prs_data *prs,
+static void lps33_prs_report_values(struct lps33_prs_data *prs,
 				    struct outputdata *out)
 {
-	input_event(prs->input_dev_pres, INPUT_EVENT_TYPE, INPUT_EVENT_X, out->press);
-	input_event(prs->input_dev_pres, INPUT_EVENT_TYPE, INPUT_EVENT_Y, out->temperature);
+	input_event(prs->input_dev_pres, INPUT_EVENT_TYPE, INPUT_EVENT_X,
+		    out->press);
+	input_event(prs->input_dev_pres, INPUT_EVENT_TYPE, INPUT_EVENT_Y,
+		    out->temperature);
 	input_sync(prs->input_dev_pres);
 }
 
-static int lps22_prs_enable(struct lps22_prs_data *prs)
+static int lps33_prs_enable(struct lps33_prs_data *prs)
 {
 	int err;
 
 	if (!atomic_cmpxchg(&prs->enabled, 0, 1)) {
-		err = lps22_prs_device_power_on(prs);
+		err = lps33_prs_device_power_on(prs);
 		if (err < 0) {
 			atomic_set(&prs->enabled, 0);
 			return err;
@@ -517,11 +479,11 @@ static int lps22_prs_enable(struct lps22_prs_data *prs)
 	return 0;
 }
 
-static int lps22_prs_disable(struct lps22_prs_data *prs)
+static int lps33_prs_disable(struct lps33_prs_data *prs)
 {
 	if (atomic_cmpxchg(&prs->enabled, 1, 0)) {
 		hrtimer_cancel(&prs->hr_timer);
-		lps22_prs_device_power_off(prs);
+		lps33_prs_device_power_off(prs);
 	}
 
 	return 0;
@@ -532,7 +494,7 @@ static ssize_t attr_get_polling_rate(struct device *dev,
 				     char *buf)
 {
 	int val;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 
 	mutex_lock(&prs->lock);
 	val = prs->pdata->poll_interval;
@@ -545,7 +507,7 @@ static ssize_t attr_set_polling_rate(struct device *dev,
 				     struct device_attribute *attr,
 				     const char *buf, size_t size)
 {
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long interval_ms;
 
 	if (kstrtoul(buf, 10, &interval_ms))
@@ -556,7 +518,7 @@ static ssize_t attr_set_polling_rate(struct device *dev,
 
 	mutex_lock(&prs->lock);
 	prs->pdata->poll_interval = interval_ms;
-	lps22_prs_update_odr(prs, interval_ms);
+	lps33_prs_update_odr(prs, interval_ms);
 	mutex_unlock(&prs->lock);
 
 	return size;
@@ -565,7 +527,7 @@ static ssize_t attr_set_polling_rate(struct device *dev,
 static ssize_t attr_get_enable(struct device *dev,
 			       struct device_attribute *attr, char *buf)
 {
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	int val = atomic_read(&prs->enabled);
 
 	return sprintf(buf, "%d\n", val);
@@ -575,24 +537,24 @@ static ssize_t attr_set_enable(struct device *dev,
 			       struct device_attribute *attr,
 			       const char *buf, size_t size)
 {
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 
 #ifdef DEBUG
-	pr_info("\n%s Value= \"%s\" \n", LPS22_PRS_DEV_NAME, buf);
+	pr_info("\n%s Value= \"%s\" \n", LPS33_PRS_DEV_NAME, buf);
 #endif
 
 	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 #ifdef DEBUG
-	pr_info("\n%s Valid val: %lu ", LPS22_PRS_DEV_NAME, val);
+	pr_info("\n%s Valid val: %lu ", LPS33_PRS_DEV_NAME, val);
 #endif
 
 	if (val)
-		lps22_prs_enable(prs);
+		lps33_prs_enable(prs);
 	else
-		lps22_prs_disable(prs);
+		lps33_prs_disable(prs);
 
 	return size;
 }
@@ -601,11 +563,11 @@ static ssize_t attr_get_press_ref(struct device *dev,
 				  struct device_attribute *attr, char *buf)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	s32 val = 0;
 
 	mutex_lock(&prs->lock);
-	err = lps22_prs_get_press_reference(prs, &val);
+	err = lps33_prs_get_press_reference(prs, &val);
 	mutex_unlock(&prs->lock);
 	if (err < 0)
 		return err;
@@ -618,7 +580,7 @@ static ssize_t attr_set_press_ref(struct device *dev,
 				  const char *buf, size_t size)
 {
 	int err = -1;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	long val = 0;
 
 	if (kstrtol(buf, 10, &val))
@@ -628,7 +590,7 @@ static ssize_t attr_set_press_ref(struct device *dev,
 		return -EINVAL;
 
 	mutex_lock(&prs->lock);
-	err = lps22_prs_set_press_reference(prs, val);
+	err = lps33_prs_set_press_reference(prs, val);
 	mutex_unlock(&prs->lock);
 
 	if (err < 0)
@@ -641,7 +603,7 @@ static ssize_t attr_set_autozero(struct device *dev,
 				 const char *buf, size_t size)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 	static u8 init_val, updated_val;
 
@@ -675,7 +637,7 @@ static ssize_t attr_reset_autozero(struct device *dev,
 				   const char *buf, size_t size)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 	static u8 init_val,updated_val;
 
@@ -712,7 +674,7 @@ static ssize_t attr_set_autorifp(struct device *dev,
 				 const char *buf, size_t size)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 	static u8 init_val, updated_val;
 
@@ -747,7 +709,7 @@ static ssize_t attr_reset_autorifp(struct device *dev,
 				   const char *buf, size_t size)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 	static u8 init_val,updated_val;
 
@@ -785,7 +747,7 @@ static ssize_t attr_set_pthreshold(struct device *dev,
 				   const char *buf, size_t size)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 
 	if (kstrtoul(buf, 10, &val))
@@ -807,7 +769,7 @@ static ssize_t attr_set_pthreshold(struct device *dev,
 		return err;
 
 #ifdef DEBUG
-	printk("LPS22HB new pressure threshold setting : %d \r\n",
+	dev_dbg(dev, "LPS33HW new pressure threshold setting : %d \r\n",
 	       (((u16)snsdata[1]) << 8) + (u16)(snsdata[0]));
 #endif
 
@@ -818,7 +780,7 @@ static ssize_t attr_get_pthreshold(struct device *dev,
 				   struct device_attribute *attr, char *buf)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	u16 val = 0;
 
 	mutex_lock(&prs->lock);
@@ -836,7 +798,7 @@ static ssize_t attr_set_pthreshold_enable(struct device *dev,
 					  const char *buf, size_t size)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 	static u8 init_val,updated_val;
 	u8 mask = ((u8)(DIFF_EN_MASK | PLE_MASK | PHE_MASK));
@@ -879,7 +841,7 @@ static ssize_t attr_get_pthreshold_enable(struct device *dev,
 					  char *buf)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	u8 val = 0;
 	u8 mask = ((u8)(DIFF_EN_MASK | PLE_MASK | PHE_MASK));
 
@@ -901,7 +863,7 @@ static ssize_t attr_set_watermark_enable(struct device *dev,
 					 const char *buf, size_t size)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 	static u8 init_val,updated_val;
 
@@ -941,7 +903,7 @@ static ssize_t attr_get_watermark_enable(struct device *dev,
 					 char *buf)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	u8 val = 0;
 
 	mutex_lock(&prs->lock);
@@ -962,7 +924,7 @@ static ssize_t attr_set_lc_mode_enable(struct device *dev,
 				       const char *buf, size_t size)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 	static u8 init_val,updated_val;
 
@@ -999,7 +961,10 @@ static ssize_t attr_set_lc_mode_enable(struct device *dev,
 	} else
 		prs->resume_state[RES_RESOL_CONF] = updated_val;
 
-	/* power up the device or at least get CTRL_REG1 back to its previous state */
+	/*
+	 * power up the device or at least get CTRL_REG1 back to
+	 * its previous state
+	 */
 	snsdata[0] = prs->resume_state[RES_CTRL_REG1] & 0x7F;
 	err = prs->tf->write(prs, CTRL_REG1, 1, snsdata);
 	mutex_unlock(&prs->lock);
@@ -1015,7 +980,7 @@ static ssize_t attr_get_lc_mode_enable(struct device *dev,
 				       char *buf)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	u8 val = 0;
 
 	mutex_lock(&prs->lock);
@@ -1033,7 +998,7 @@ static ssize_t attr_set_lpf_enable(struct device *dev,
 				   const char *buf, size_t size)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 	static u8 init_val,updated_val;
 	u8 const mask = EN_LPFP_MASK;
@@ -1073,7 +1038,7 @@ static ssize_t attr_get_lpf_enable(struct device *dev,
 				   char *buf)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	u8 val = 0;
 
 	mutex_lock(&prs->lock);
@@ -1091,7 +1056,7 @@ static ssize_t attr_set_lpf_cutoff_freq(struct device *dev,
 					const char *buf, size_t size)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 	static u8 init_val,updated_val;
 	u8 const mask = LPF_CFG_MASK;
@@ -1131,7 +1096,7 @@ static ssize_t attr_get_lpf_cutoff_freq(struct device *dev,
 					char *buf)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	u8 val = 0;
 
 	mutex_lock(&prs->lock);
@@ -1149,7 +1114,7 @@ static ssize_t attr_get_fifo_status(struct device *dev,
 				    char *buf)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	u8 val = 0;
 
 	mutex_lock(&prs->lock);
@@ -1166,7 +1131,7 @@ static ssize_t attr_get_status(struct device *dev,
 			       struct device_attribute *attr, char *buf)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	u8 val = 0;
 
 	mutex_lock(&prs->lock);
@@ -1184,7 +1149,7 @@ static ssize_t attr_get_interrupt_source(struct device *dev,
 					 char *buf)
 {
 	int err;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	u8 val = 0;
 
 	mutex_lock(&prs->lock);
@@ -1201,12 +1166,12 @@ static ssize_t attr_set_fifo(struct device *dev, struct device_attribute *attr,
 			     const char *buf, size_t size)
 {
 	int err = -1;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 	static u8 init_val,updated_val;
 
 #ifdef DEBUG
-	pr_info("\n%s Value= \"%s\" \n", LPS22_PRS_DEV_NAME, buf);
+	pr_info("\n%s Value= \"%s\" \n", LPS33_PRS_DEV_NAME, buf);
 #endif
 	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
@@ -1214,7 +1179,8 @@ static ssize_t attr_set_fifo(struct device *dev, struct device_attribute *attr,
 		goto exit;
 
 #ifdef DEBUG
-	pr_info("\n%s Valid val to put in reg2: %lu \r\n", LPS22_PRS_DEV_NAME, val);
+	pr_info("\n%s Valid val to put in reg2: %lu \r\n",
+		LPS33_PRS_DEV_NAME, val);
 #endif
 
 	mutex_lock(&prs->lock);
@@ -1226,7 +1192,8 @@ static ssize_t attr_set_fifo(struct device *dev, struct device_attribute *attr,
 
 	init_val = snsdata[0];
 	prs->resume_state[RES_CTRL_REG2] = init_val;
-	updated_val = (((FIFO_EN_MASK) & (((u8)val)<<6)) | ((~FIFO_EN_MASK) & (init_val)));
+	updated_val = (((FIFO_EN_MASK) & (((u8)val)<<6)) |
+		       ((~FIFO_EN_MASK) & (init_val)));
 
 	snsdata[0] = updated_val;
 	err = prs->tf->write(prs, CTRL_REG2, 1, snsdata);
@@ -1247,19 +1214,15 @@ static ssize_t attr_fifo_mode(struct device *dev, struct device_attribute *attr,
 {
 	int err = -1;
 	u8 new_val;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	u8 x;
 	unsigned long val;
-
-#ifdef DEBUG
-	pr_info("\n%s Valid val: %lu ", LPS22_PRS_DEV_NAME, val);
-#endif
 
 	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 #ifdef DEBUG
-	pr_info("\n%s Valid val: %lu ", LPS22_PRS_DEV_NAME, val);
+	pr_info("\n%s Valid val: %lu ", LPS33_PRS_DEV_NAME, val);
 #endif
 
 	mutex_lock(&prs->lock);
@@ -1282,24 +1245,21 @@ static ssize_t attr_fifo_mode(struct device *dev, struct device_attribute *attr,
 	return size;
 }
 
-static ssize_t attr_set_samples_fifo(struct device *dev, struct device_attribute *attr,
+static ssize_t attr_set_samples_fifo(struct device *dev,
+				     struct device_attribute *attr,
 				     const char *buf, size_t size)
 {
 	int err= -1;
 	u8 new_val;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	u8 x;
 	unsigned long val;
-
-#ifdef DEBUG
-	pr_info("\n%s Valid val: %lu ", LPS22_PRS_DEV_NAME, val);
-#endif
 
 	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 #ifdef DEBUG
-	pr_info("\n%s Valid val: %lu ", LPS22_PRS_DEV_NAME, val);
+	pr_info("\n%s Valid val: %lu ", LPS33_PRS_DEV_NAME, val);
 #endif
 
 	mutex_lock(&prs->lock);
@@ -1328,7 +1288,7 @@ static ssize_t attr_reg_set(struct device *dev, struct device_attribute *attr,
 			    const char *buf, size_t size)
 {
 	int rc;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	u8 reg, data;
 	unsigned long val;
 
@@ -1349,7 +1309,7 @@ static ssize_t attr_reg_set(struct device *dev, struct device_attribute *attr,
 static ssize_t attr_reg_get(struct device *dev, struct device_attribute *attr,
 			    char *buf)
 {
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	int rc;
 	u8 reg, data;
 
@@ -1366,7 +1326,7 @@ static ssize_t attr_reg_get(struct device *dev, struct device_attribute *attr,
 static ssize_t attr_addr_set(struct device *dev, struct device_attribute *attr,
 			     const char *buf, size_t size)
 {
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 
 	if (kstrtoul(buf, 16, &val))
@@ -1378,22 +1338,24 @@ static ssize_t attr_addr_set(struct device *dev, struct device_attribute *attr,
 	return size;
 }
 
-static ssize_t attr_reg_dump(struct device *dev, struct device_attribute *attr,char *buf)
+static ssize_t attr_reg_dump(struct device *dev, struct device_attribute *attr,
+			     char *buf)
 {
 	ssize_t ret;
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	int err;
 	u8 data = 0;
 	u8 addr;
 
 	printk("\r\n");
 	mutex_lock(&prs->lock);
-	for(addr = 0x0B; addr <= 0x2C;addr++) {
+	for(addr = 0x0B; addr <= 0x2C; addr++) {
 		err = prs->tf->read(prs, addr, 1, snsdata);
 		if (err < 0) {
-			printk("Error reading from register %02x \r\n",addr);
+			printk("Error reading from register %02x \r\n", addr);
 		} else {
-			printk("register addr: %02x value: %02x \r\n",addr,snsdata[0]);
+			printk("register addr: %02x value: %02x \r\n",
+				addr, snsdata[0]);
 			if (addr == 0x0F)
 				data = snsdata[0];
 		}
@@ -1409,7 +1371,7 @@ static ssize_t attr_set_logout_decimation(struct device *dev,
 					  struct device_attribute *attr,
 					  const char *buf, size_t size)
 {
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 
 	if (kstrtoul(buf, 10, &val))
@@ -1421,10 +1383,11 @@ static ssize_t attr_set_logout_decimation(struct device *dev,
 	return size;
 }
 
-static ssize_t attr_set_hex_measr_log(struct device *dev, struct device_attribute *attr,
+static ssize_t attr_set_hex_measr_log(struct device *dev,
+				      struct device_attribute *attr,
 				      const char *buf, size_t size)
 {
-	struct lps22_prs_data *prs = dev_get_drvdata(dev);
+	struct lps33_prs_data *prs = dev_get_drvdata(dev);
 	unsigned long val;
 
 	if (kstrtoul(buf, 10, &val))
@@ -1442,7 +1405,7 @@ exit:
 #endif
 
 static struct device_attribute attributes[] = {
-	__ATTR(poll_period_ms, 0664, attr_get_polling_rate,attr_set_polling_rate),
+	__ATTR(poll_period_ms, 0664, attr_get_polling_rate, attr_set_polling_rate),
 	__ATTR(enable_device, 0664, attr_get_enable, attr_set_enable),
 	__ATTR(pressure_reference_level, 0664, attr_get_press_ref,attr_set_press_ref),
 	__ATTR(pressure_threshold, 0664, attr_get_pthreshold, attr_set_pthreshold),
@@ -1496,31 +1459,31 @@ static void remove_sysfs_interfaces(struct device *dev)
 		device_remove_file(dev, attributes + i);
 }
 
-static void lps22_prs_input_work_func(struct work_struct *work)
+static void lps33_prs_input_work_func(struct work_struct *work)
 {
-	struct lps22_prs_data *prs = container_of((struct work_struct *)work,
-						  struct lps22_prs_data,
+	struct lps33_prs_data *prs = container_of((struct work_struct *)work,
+						  struct lps33_prs_data,
 						  input_work);
 	struct outputdata output;
 	int err;
 
 	mutex_lock(&prs->lock);
-	err = lps22_prs_get_presstemp_data(prs, &output);
+	err = lps33_prs_get_presstemp_data(prs, &output);
 	if (err < 0)
 		dev_err(prs->dev, "get_pressure_data failed\n");
 	else
-		lps22_prs_report_values(prs, &output);
+		lps33_prs_report_values(prs, &output);
 
 	mutex_unlock(&prs->lock);
 
 	hrtimer_start(&prs->hr_timer, prs->delta_ts, HRTIMER_MODE_REL);
 }
 
-static enum hrtimer_restart lps22_prs_poll_function_read(struct hrtimer *timer)
+static enum hrtimer_restart lps33_prs_poll_function_read(struct hrtimer *timer)
 {
-	struct lps22_prs_data *prs;
+	struct lps33_prs_data *prs;
 
-	prs = container_of((struct hrtimer *)timer, struct lps22_prs_data,
+	prs = container_of((struct hrtimer *)timer, struct lps33_prs_data,
 			   hr_timer);
 
 	queue_work(prs->workqueue, &prs->input_work);
@@ -1528,24 +1491,24 @@ static enum hrtimer_restart lps22_prs_poll_function_read(struct hrtimer *timer)
 	return HRTIMER_NORESTART;
 }
 
-#ifdef LPS22_EN_ON_OPEN
-int lps22_prs_input_open(struct input_dev *input)
+#ifdef LPS33_EN_ON_OPEN
+int lps33_prs_input_open(struct input_dev *input)
 {
-	struct lps22_prs_data *prs = input_get_drvdata(input);
+	struct lps33_prs_data *prs = input_get_drvdata(input);
 
-	return lps22_prs_enable(prs);
+	return lps33_prs_enable(prs);
 }
 
-void lps22_prs_input_close(struct input_dev *dev)
+void lps33_prs_input_close(struct input_dev *dev)
 {
-	lps22_prs_disable(input_get_drvdata(dev));
+	lps33_prs_disable(input_get_drvdata(dev));
 }
 #endif
 
-static int lps22_prs_validate_pdata(struct lps22_prs_data *prs)
+static int lps33_prs_validate_pdata(struct lps33_prs_data *prs)
 {
 	/* checks for correctness of minimal polling period */
-	prs->pdata->min_interval = (unsigned int)LPS22_PRS_MIN_POLL_PERIOD_MS;
+	prs->pdata->min_interval = (unsigned int)LPS33_PRS_MIN_POLL_PERIOD_MS;
 	prs->pdata->poll_interval = max(prs->pdata->poll_interval,
 					prs->pdata->min_interval);
 
@@ -1558,7 +1521,7 @@ static int lps22_prs_validate_pdata(struct lps22_prs_data *prs)
 	return 0;
 }
 
-static int lps22_prs_input_init(struct lps22_prs_data *prs)
+static int lps33_prs_input_init(struct lps33_prs_data *prs)
 {
 	int err;
 
@@ -1566,9 +1529,9 @@ static int lps22_prs_input_init(struct lps22_prs_data *prs)
 	if (!prs->workqueue)
 		return -ENOMEM;
 
-	INIT_WORK(&prs->input_work, lps22_prs_input_work_func);
+	INIT_WORK(&prs->input_work, lps33_prs_input_work_func);
 	hrtimer_init(&prs->hr_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-	prs->hr_timer.function = &lps22_prs_poll_function_read;
+	prs->hr_timer.function = &lps33_prs_poll_function_read;
 
 	prs->input_dev_pres = input_allocate_device();
 	if (!prs->input_dev_pres) {
@@ -1577,9 +1540,9 @@ static int lps22_prs_input_init(struct lps22_prs_data *prs)
 		return -ENOMEM;
 	}
 
-#ifdef LPS22_EN_ON_OPEN
-	prs->input_dev_pres->open = lps22_prs_input_open;
-	prs->input_dev_pres->close = lps22_prs_input_close;
+#ifdef LPS33_EN_ON_OPEN
+	prs->input_dev_pres->open = lps33_prs_input_open;
+	prs->input_dev_pres->close = lps33_prs_input_close;
 #endif
 	prs->input_dev_pres->name = prs->name;
 	prs->input_dev_pres->id.bustype = prs->bustype;
@@ -1603,18 +1566,18 @@ static int lps22_prs_input_init(struct lps22_prs_data *prs)
 	return 0;
 }
 
-static void lps22_prs_input_cleanup(struct lps22_prs_data *prs)
+static void lps33_prs_input_cleanup(struct lps33_prs_data *prs)
 {
 	input_unregister_device(prs->input_dev_pres);
 	input_free_device(prs->input_dev_pres);
 }
 
-int lps22hb_common_probe(struct lps22_prs_data *prs)
+int lps33hw_common_probe(struct lps33_prs_data *prs)
 {
 	int err = -1;
 	u8 buf[5];
  
-	pr_info("%s: probe start.\n", LPS22_PRS_DEV_NAME);
+	pr_info("%s: probe start.\n", LPS33_PRS_DEV_NAME);
 
 	mutex_init(&prs->lock);
 	mutex_init(&prs->tb.buf_lock);
@@ -1629,13 +1592,13 @@ int lps22hb_common_probe(struct lps22_prs_data *prs)
 	}
 
 	if (prs->dev->platform_data == NULL) {	
-		memcpy(prs->pdata, &default_lps22_pdata,
-		       sizeof(struct lps22_prs_platform_data));
-		dev_info(prs->dev, "using default plaform_data for lps22\n");
+		memcpy(prs->pdata, &default_lps33_pdata,
+		       sizeof(struct lps33_prs_platform_data));
+		dev_info(prs->dev, "using default plaform_data for lps33\n");
 	} else {
 		memcpy(prs->pdata, prs->dev->platform_data,
-		       sizeof(struct lps22_prs_platform_data));
-		dev_info(prs->dev, "using user plaform_data for lps22\n");
+		       sizeof(struct lps33_prs_platform_data));
+		dev_info(prs->dev, "using user plaform_data for lps33\n");
         }
 
 	if (prs->pdata->init) {
@@ -1655,16 +1618,16 @@ int lps22hb_common_probe(struct lps22_prs_data *prs)
 	} else
 		prs->hw_working = 1;
 
-	if (buf[0] != WHOAMI_LPS22_PRS) {
+	if (buf[0] != WHOAMI_LPS33_PRS) {
 		dev_err(prs->dev, "device unknown. Expected: 0x%02x,"
-			" Replies: 0x%02x\n", WHOAMI_LPS22_PRS, buf[0]);
+			" Replies: 0x%02x\n", WHOAMI_LPS33_PRS, buf[0]);
 		err = -1;
 		goto err_mutexunlockfreedata;
 	}
 
-	pr_info("%s ID Chip OK \n", LPS22_PRS_DEV_NAME);
+	pr_info("%s ID Chip OK \n", LPS33_PRS_DEV_NAME);
 
-	err = lps22_prs_validate_pdata(prs);
+	err = lps33_prs_validate_pdata(prs);
 	if (err < 0) {
 		dev_err(prs->dev, "failed to validate platform data\n");
 		goto err_exit_kfree_pdata;
@@ -1683,7 +1646,7 @@ int lps22hb_common_probe(struct lps22_prs_data *prs)
 	/* init registers which need values different from zero */
 	prs->resume_state[RES_CTRL_REG1] = (ODR_MASK & ODR_1_1) | (BDU_MASK);
 
-	err = lps22_prs_device_power_on(prs);
+	err = lps33_prs_device_power_on(prs);
 	if (err < 0) {
 		dev_err(prs->dev, "power on failed: %d\n", err);
 		goto err_exit_pointer;
@@ -1691,13 +1654,13 @@ int lps22hb_common_probe(struct lps22_prs_data *prs)
 
 	atomic_set(&prs->enabled, 1);
 
-	err = lps22_prs_update_odr(prs, prs->pdata->poll_interval);
+	err = lps33_prs_update_odr(prs, prs->pdata->poll_interval);
 	if (err < 0) {
 		dev_err(prs->dev, "update_odr failed\n");
 		goto err_power_off;
 	}
 
-	err = lps22_prs_input_init(prs);
+	err = lps33_prs_input_init(prs);
 	if (err < 0) {
 		dev_err(prs->dev, "input init failed\n");
 		goto err_power_off;
@@ -1706,18 +1669,18 @@ int lps22hb_common_probe(struct lps22_prs_data *prs)
 	err = create_sysfs_interfaces(prs->dev);
 	if (err < 0) {
 		dev_err(prs->dev,
-			"device LPS22_PRS_DEV_NAME sysfs register failed\n");
+			"device LPS33_PRS_DEV_NAME sysfs register failed\n");
 		goto err_input_cleanup;
 	}
 
-	lps22_prs_device_power_off(prs);
+	lps33_prs_device_power_off(prs);
 
 	/* As default, do not report information */
 	atomic_set(&prs->enabled, 0);
 
 	mutex_unlock(&prs->lock);
 
-	dev_info(prs->dev, "%s: probed\n", LPS22_PRS_DEV_NAME);
+	dev_info(prs->dev, "%s: probed\n", LPS33_PRS_DEV_NAME);
 
 	buf[0] = 0x10;
 	err = prs->tf->write(prs, CTRL_REG2, 1, buf);
@@ -1727,9 +1690,9 @@ int lps22hb_common_probe(struct lps22_prs_data *prs)
 	return 0;
 
 err_input_cleanup:
-	lps22_prs_input_cleanup(prs);
+	lps33_prs_input_cleanup(prs);
 err_power_off:
-	lps22_prs_device_power_off(prs);
+	lps33_prs_device_power_off(prs);
 err_exit_pointer:
 	if (prs->pdata->exit)
 		prs->pdata->exit();
@@ -1741,17 +1704,17 @@ err_exit_kfree_pdata:
 
 err_mutexunlockfreedata:
 	mutex_unlock(&prs->lock);
-	pr_err("%s: Driver Init failed\n", LPS22_PRS_DEV_NAME);
+	pr_err("%s: Driver Init failed\n", LPS33_PRS_DEV_NAME);
 
 	return err;
 }
-EXPORT_SYMBOL(lps22hb_common_probe);
+EXPORT_SYMBOL(lps33hw_common_probe);
 
-int lps22hb_common_remove(struct lps22_prs_data *prs)
+int lps33hw_common_remove(struct lps33_prs_data *prs)
 {
-	lps22_prs_disable(prs);
-	lps22_prs_input_cleanup(prs);
-	lps22_prs_device_power_off(prs);
+	lps33_prs_disable(prs);
+	lps33_prs_input_cleanup(prs);
+	lps33_prs_device_power_off(prs);
 	remove_sysfs_interfaces(prs->dev);
 
 	if (prs->workqueue) {
@@ -1766,28 +1729,28 @@ int lps22hb_common_remove(struct lps22_prs_data *prs)
 
 	return 0;
 }
-EXPORT_SYMBOL(lps22hb_common_remove);
+EXPORT_SYMBOL(lps33hw_common_remove);
 
 #ifdef CONFIG_PM
-int lps22hb_common_resume(struct lps22_prs_data *prs)
+int lps33hw_common_resume(struct lps33_prs_data *prs)
 {
 	if (prs->on_before_suspend)
-		return lps22_prs_enable(prs);
+		return lps33_prs_enable(prs);
 
 	return 0;
 }
-EXPORT_SYMBOL(lps22hb_common_resume);
+EXPORT_SYMBOL(lps33hw_common_resume);
 
-int lps22hb_common_suspend(struct lps22_prs_data *prs)
+int lps33hw_common_suspend(struct lps33_prs_data *prs)
 {
 	prs->on_before_suspend = atomic_read(&prs->enabled);
 
-	return lps22_prs_disable(prs);
+	return lps33_prs_disable(prs);
 }
-EXPORT_SYMBOL(lps22hb_common_suspend);
+EXPORT_SYMBOL(lps33hw_common_suspend);
 #endif
 
-MODULE_DESCRIPTION("STMicrolelectronics lps22 pressure sensor driver");
-MODULE_AUTHOR("HESA BU, STMicroelectronics");
+MODULE_DESCRIPTION("STMicrolelectronics lps33hw pressure sensor driver");
+MODULE_AUTHOR("AMG STMicroelectronics");
 MODULE_LICENSE("GPL v2");
 
