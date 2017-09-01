@@ -5,5 +5,6 @@ if INPUT_PRESSURE
 
 source "drivers/input/misc/st/pressure/lps22hb/Kconfig"
 source "drivers/input/misc/st/pressure/lps25h/Kconfig"
+source "drivers/input/misc/st/pressure/lps33hw/Kconfig"
 
 endif # INPUT_PRESSURE
