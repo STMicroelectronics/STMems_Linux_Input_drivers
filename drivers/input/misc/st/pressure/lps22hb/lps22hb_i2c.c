@@ -134,14 +134,22 @@ static const struct dev_pm_ops lps22hb_pm_ops = {
 #endif /* CONFIG_PM */
 
 static const struct i2c_device_id lps22hb_ids[] = {
-	{ LPS22_PRS_DEV_NAME, 0 },
+	{ LPS22_PRS_DEV_NAME },
+	{ LPS22_HD_PRS_DEV_NAME },
 	{ }
 };
 MODULE_DEVICE_TABLE(i2c, lps22hb_ids);
 
 #ifdef CONFIG_OF
 static const struct of_device_id lps22hb_id_table[] = {
-	{ .compatible = "st,lps22hb", },
+	{
+		.compatible = "st,lps22hb",
+		.data = LPS22_PRS_DEV_NAME,
+	},
+	{
+		.compatible = "st,lps22hd",
+		.data = LPS22_HD_PRS_DEV_NAME,
+	},
 	{ },
 };
 MODULE_DEVICE_TABLE(of, lps22hb_id_table);
