@@ -44,6 +44,7 @@
 
 #define LPS22_PRS_MIN_POLL_PERIOD_MS	13
 #define	LPS22_PRS_DEV_NAME		"lps22hb"
+#define	LPS22_HD_PRS_DEV_NAME		"lps22hd"
 
 /* input define mappings */
 #define ABS_PR		ABS_PRESSURE
