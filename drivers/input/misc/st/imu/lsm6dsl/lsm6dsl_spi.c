@@ -168,14 +168,15 @@ static const struct dev_pm_ops lsm6dsl_pm_ops = {
 #define LSM6DSL_PM_OPS		NULL
 #endif /* CONFIG_PM */
 
-#ifdef CONFIG_OF
 static const struct spi_device_id lsm6dsl_ids[] = {
 	{ LSM6DSL_DEV_NAME, 0 },
 	{ }
 };
 MODULE_DEVICE_TABLE(spi, lsm6dsl_ids);
 
+#ifdef CONFIG_OF
 static const struct of_device_id lsm6dsl_id_table[] = {
+
 	{ .compatible = "st,lsm6dsl", },
 	{ },
 };

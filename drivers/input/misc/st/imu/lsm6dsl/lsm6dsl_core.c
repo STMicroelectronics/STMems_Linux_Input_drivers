@@ -26,6 +26,8 @@
 #include <linux/of_gpio.h>
 #endif
 
+#include "linux/platform_data/lsm6dsl.h"
+
 #include "lsm6dsl_core.h"
 
 /* COMMON DEFINE FOR ACCEL-GYRO SENSORS */
