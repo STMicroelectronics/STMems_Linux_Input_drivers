@@ -103,11 +103,11 @@
 #define LSM6DSM_GYRO_ODR_MASK			0xf0
 #define LSM6DSM_GYRO_FS_ADDR			0x11
 #define LSM6DSM_GYRO_FS_MASK			0x0c
-#define LSM6DSM_GYRO_FS_245_VAL			0x00
+#define LSM6DSM_GYRO_FS_250_VAL			0x00
 #define LSM6DSM_GYRO_FS_500_VAL			0x01
 #define LSM6DSM_GYRO_FS_1000_VAL		0x02
 #define LSM6DSM_GYRO_FS_2000_VAL		0x03
-#define LSM6DSM_GYRO_FS_245_GAIN		8750
+#define LSM6DSM_GYRO_FS_250_GAIN		8750
 #define LSM6DSM_GYRO_FS_500_GAIN		17500
 #define LSM6DSM_GYRO_FS_1000_GAIN		35000
 #define LSM6DSM_GYRO_FS_2000_GAIN		70000
@@ -246,9 +246,9 @@ static struct lsm6dsm_fs_table {
 	[LSM6DSM_GYRO] = {
 		.addr = LSM6DSM_GYRO_FS_ADDR,
 		.mask = LSM6DSM_GYRO_FS_MASK,
-		.fs_avl[0] = { .gain = LSM6DSM_GYRO_FS_245_GAIN,
-			       .value = LSM6DSM_GYRO_FS_245_VAL,
-			       .urv = 245, },
+		.fs_avl[0] = { .gain = LSM6DSM_GYRO_FS_250_GAIN,
+			       .value = LSM6DSM_GYRO_FS_250_VAL,
+			       .urv = 250, },
 		.fs_avl[1] = { .gain = LSM6DSM_GYRO_FS_500_GAIN,
 			       .value = LSM6DSM_GYRO_FS_500_VAL,
 			       .urv = 500, },
