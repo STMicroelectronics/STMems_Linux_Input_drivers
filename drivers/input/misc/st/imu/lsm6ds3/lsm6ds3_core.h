@@ -72,7 +72,7 @@ enum {
 #define SENSITIVITY_ACC_16G		488	/** ug/LSB */
 /* Sensitivity Gyr */
 #define SENSITIVITY_GYR_125		437	/** 10udps/LSB */
-#define SENSITIVITY_GYR_245		875	/** 10udps/LSB */
+#define SENSITIVITY_GYR_250		875	/** 10udps/LSB */
 #define SENSITIVITY_GYR_500		1750	/** 10udps/LSB */
 #define SENSITIVITY_GYR_1000		3500	/** 10udps/LSB */
 #define SENSITIVITY_GYR_2000		7000	/** 10udps/LSB */
