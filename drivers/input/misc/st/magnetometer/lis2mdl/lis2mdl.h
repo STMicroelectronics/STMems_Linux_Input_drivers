@@ -56,6 +56,7 @@
 #define to_dev(obj) container_of(obj, struct device, kobj)
 
 #define LIS2MDL_DEV_NAME			"lis2mdl"
+#define IIS2MDC_DEV_NAME			"iis2mdc"
 #define LIS2MDL_I2C_ADDR			0x1e
 
 struct lis2mdl_platform_data {

@@ -1,10 +1,10 @@
 config INPUT_LIS2DH
-	tristate "STMicroelectronics LIS2DH/LIS2DH12 sensor"
+	tristate "STMicroelectronics LIS2DH/LIS2DH12/IIS2DH sensor"
 	depends on (I2C || SPI) && SYSFS
 	select INPUT_LIS2DH_I2C if (I2C)
 	select INPUT_LIS2DH_SPI if (SPI)
 	help
-	   This driver support the STMicroelectronics LIS2DH/LIS2DH12 sensor.
+	   This driver support the STMicroelectronics LIS2DH/LIS2DH12/IIS2DH sensor.
 
 	   To compile this driver as a module, choose M here. The module
 	   will be called lis2dh.

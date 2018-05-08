@@ -3,3 +3,4 @@ obj-$(CONFIG_INPUT_LSM303AH) += lsm303ah/
 obj-$(CONFIG_INPUT_LSM303C) += lsm303c/
 obj-$(CONFIG_INPUT_LSM303D) += lsm303d/
 obj-$(CONFIG_INPUT_LSM303DLHC) += lsm303dlhc/
+obj-$(CONFIG_INPUT_ISM303DAC) += ism303dac/

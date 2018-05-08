@@ -1,5 +1,5 @@
 #
-# Makefile for the input misc STM acc lis2dh driver
+# Makefile for the input misc STM acc lis2dh/iis2dh driver
 #
 lis2dh-acc-y += lis2dh_acc.o
 obj-$(CONFIG_INPUT_LIS2DH) += lis2dh-acc.o

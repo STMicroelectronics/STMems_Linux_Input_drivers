@@ -50,6 +50,7 @@ Version History.
 //#define LIS2DH_EN_OPEN_CLOSE
 
 #define	LIS2DH_ACC_DEV_NAME		"lis2dh_acc"
+#define	IIS2DH_ACC_DEV_NAME		"iis2dh_acc"
 
 #define	LIS2DH_ACC_MIN_POLL_PERIOD_MS	1
 
