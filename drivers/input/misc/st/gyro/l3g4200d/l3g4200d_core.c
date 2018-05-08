@@ -760,8 +760,7 @@ int l3g4200d_common_probe(struct l3g4200d_data *gyro)
 #ifndef CONFIG_OF
 	if (gyro->dev->platform_data == NULL) {
 		dev_err(gyro->dev, "platform data is NULL. exiting.\n");
-		err = -ENODEV;
-		goto err0;
+		return -ENODEV;
 	}
 #else
 	gyro->dev->platform_data = NULL;

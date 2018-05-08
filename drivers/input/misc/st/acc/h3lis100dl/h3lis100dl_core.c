@@ -905,7 +905,7 @@ int h3lis100dl_common_probe(struct h3lis100dl_data *acc)
 	if (acc->dev->platform_data == NULL) {
 		dev_err(acc->dev, "platform data is NULL. exiting.\n");
 		err = -ENODEV;
-		goto exit_check_functionality_failed;
+		return err;
 
 	}
 #else

@@ -24,6 +24,8 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
+#else
+#include "linux/input/lsm6dsm.h"
 #endif
 
 #include "lsm6dsm_core.h"
@@ -137,7 +139,7 @@
 #define LSM6DSM_STEP_COUNTER_DURATION_ADDR	0x15
 
 /* CUSTOM VALUES FOR TILT SENSOR */
- #define LSM6DSM_TILT_EN_ADDR			0x19
+#define LSM6DSM_TILT_EN_ADDR			0x19
 #define LSM6DSM_TILT_EN_MASK			0x08
 #define LSM6DSM_TILT_DRDY_IRQ_MASK		0x02
 

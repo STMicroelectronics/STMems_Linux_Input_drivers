@@ -203,7 +203,9 @@ static struct spi_driver h3lis100dl_spi_driver = {
 	},
 	.probe    = h3lis100dl_spi_probe,
 	.remove   = h3lis100dl_spi_remove,
+#ifdef CONFIG_OF
 	.id_table = h3lis100dl_ids,
+#endif
 };
 
 module_spi_driver(h3lis100dl_spi_driver);

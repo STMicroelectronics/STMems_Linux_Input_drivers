@@ -26,6 +26,7 @@
  * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
  *
  *****************************************************************************/
+#include <linux/module.h>
 #include <linux/init.h>
 #include <linux/slab.h>
 #include <linux/workqueue.h>
@@ -42,7 +43,6 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
-#include <linux/module.h>
 #endif
 
 #include "asm330lxh.h"
@@ -1379,7 +1379,8 @@ static struct attribute *attributes_acc[] = { &poll_attr_acc.attr,
 	NULL,
 };
 
-static struct attribute *attributes_gyr[] = { &poll_attr_gyr.attr,
+static struct attribute *attributes_gyr[] = {
+	&poll_attr_gyr.attr,
 	&enable_attr_gyr.attr, &range_attr_gyr.attr,
 	NULL,
 };
@@ -1615,7 +1616,7 @@ int32_t asm330lxh_common_probe(struct asm330lxh_status *stat)
 	asm330lxh_acc_gyr_parse_dt(stat, stat->dev);
 #else
 	/* Board File */
-	if (client->dev.platform_data == NULL) {
+	if (stat->dev->platform_data == NULL) {
 		memcpy(stat->pdata_main, &default_asm330lxh_main_platform_data,
 		       sizeof(*stat->pdata_main));
 		memcpy(stat->pdata_acc, &default_asm330lxh_acc_pdata,
@@ -1626,10 +1627,10 @@ int32_t asm330lxh_common_probe(struct asm330lxh_status *stat)
 			 "accelerometer and gyroscope\n");
 	} else {
 		struct asm330lxh_main_platform_data *platform_data;
-		platform_data = client->dev.platform_data;
+		platform_data = stat->dev->platform_data;
 
 		if (platform_data == NULL) {
-			memcpy(stat->pdata_main,fv
+			memcpy(stat->pdata_main,
 			       &default_asm330lxh_main_platform_data,
 			       sizeof(*stat->pdata_main));
 			dev_info(stat->dev,

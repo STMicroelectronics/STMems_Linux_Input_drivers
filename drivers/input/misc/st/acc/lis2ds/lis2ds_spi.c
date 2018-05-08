@@ -185,13 +185,13 @@ static const struct dev_pm_ops lis2ds_pm_ops = {
 #define LIS2DS_PM_OPS		NULL
 #endif /* CONFIG_PM */
 
-#ifdef CONFIG_OF
 static const struct spi_device_id lis2ds_ids[] = {
 	{ LIS2DS_DEV_NAME, 0 },
 	{ }
 };
 MODULE_DEVICE_TABLE(spi, lis2ds_ids);
 
+#ifdef CONFIG_OF
 static const struct of_device_id lis2ds_id_table[] = {
 	{ .compatible = "st,lis2ds", },
 	{ .compatible = "st,lis2ds12", },

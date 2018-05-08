@@ -41,6 +41,8 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
+#else
+#include "linux/input/lis2dw12.h"
 #endif
 
 #include "lis2dw12_core.h"

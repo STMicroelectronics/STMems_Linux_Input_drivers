@@ -705,7 +705,7 @@ int a3g4250d_common_probe(struct a3g4250d_data *gyro)
 	if (gyro->dev->platform_data == NULL) {
 		dev_err(gyro->dev, "platform data is NULL exiting.\n");
 		err = -ENODEV;
-		goto err0;
+		return err;
 	}
 #else
 	gyro->dev->platform_data = NULL;
