@@ -157,7 +157,8 @@ static const struct dev_pm_ops lis2dh_acc_pm_ops = {
 
 static const struct i2c_device_id lis2dh_acc_ids[] = {
 	{ LIS2DH_ACC_DEV_NAME, 0 },
-	{ }
+	{ IIS2DH_ACC_DEV_NAME, 0 },
+	{ },
 };
 MODULE_DEVICE_TABLE(i2c, lis2dh_acc_ids);
 
@@ -165,6 +166,7 @@ MODULE_DEVICE_TABLE(i2c, lis2dh_acc_ids);
 static const struct of_device_id lis2dh_acc_id_table[] = {
 	{ .compatible = "st,lis2dh", },
 	{ .compatible = "st,lis2dh12", },
+	{ .compatible = "st,iis2dh", },
 	{ },
 };
 MODULE_DEVICE_TABLE(of, lis2dh_acc_id_table);

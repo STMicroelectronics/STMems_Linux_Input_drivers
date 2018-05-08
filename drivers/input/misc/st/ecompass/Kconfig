@@ -9,5 +9,6 @@ source "drivers/input/misc/st/ecompass/lsm303ah/Kconfig"
 source "drivers/input/misc/st/ecompass/lsm303c/Kconfig"
 source "drivers/input/misc/st/ecompass/lsm303d/Kconfig"
 source "drivers/input/misc/st/ecompass/lsm303dlhc/Kconfig"
+source "drivers/input/misc/st/ecompass/ism303dac/Kconfig"
 
 endif # INPUT_ECOMPASS

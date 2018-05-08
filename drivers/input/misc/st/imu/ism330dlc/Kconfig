@@ -1,0 +1,20 @@
+config INPUT_ISM330DLC
+	tristate "STMicroelectronics ISM330DLC sensor"
+	depends on (I2C || SPI) && SYSFS
+	select INPUT_ISM330DLC_I2C if (I2C)
+	select INPUT_ISM330DLC_SPI if (SPI)
+	help
+	   This driver support the STMicroelectronics ISM330DLC sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called ism330dlc.
+
+config INPUT_ISM330DLC_I2C
+	tristate
+	depends on INPUT_ISM330DLC
+	depends on I2C
+
+config INPUT_ISM330DLC_SPI
+	tristate
+	depends on INPUT_ISM330DLC
+	depends on SPI

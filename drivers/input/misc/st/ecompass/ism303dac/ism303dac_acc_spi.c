@@ -1,9 +1,8 @@
 /*
- * STMicroelectronics lis2mdl_spi.c driver
+ * STMicroelectronics ism303dac_acc_spi.c driver
  *
  * Copyright 2016 STMicroelectronics Inc.
  *
- * Armando Visconti <armando.visconti@st.com>
  * Lorenzo Bianconi <lorenzo.bianconi@st.com>
  *
  * Licensed under the GPL-2.
@@ -15,20 +14,21 @@
 #include <linux/slab.h>
 #include <linux/spi/spi.h>
 #include <linux/input.h>
+#include <linux/uaccess.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/version.h>
 
-#include "lis2mdl.h"
+#include "ism303dac_core.h"
 
-#define LIS2MDL_WHO_AM_I_ADDR		(0x4F)
-#define LIS2MDL_WHO_AM_I_VAL		(0x40)
+#define ISM303DAC_WHO_AM_I_ADDR			0x0f
+#define ISM303DAC_WHO_AM_I_DEF			0x43
 
 #define SENSORS_SPI_READ	0x80
 
 /* XXX: caller must hold cdata->lock */
-static int lis2mdl_spi_read(struct st_common_data *cdata,
+static int ism303dac_acc_spi_read(struct st_common_data *cdata,
 				 u8 addr, int len, u8 *data)
 {
 	int err;
@@ -64,7 +64,7 @@ static int lis2mdl_spi_read(struct st_common_data *cdata,
 }
 
 /* XXX: caller must hold cdata->lock */
-static int lis2mdl_spi_write(struct st_common_data *cdata,
+static int ism303dac_acc_spi_write(struct st_common_data *cdata,
 				  u8 addr, int len, u8 *data)
 {
 	struct spi_message msg;
@@ -76,7 +76,7 @@ static int lis2mdl_spi_write(struct st_common_data *cdata,
 		.len = len + 1,
 	};
 
-	if (len >= LIS2MDL_TX_MAX_LENGTH)
+	if (len >= ISM303DAC_TX_MAX_LENGTH)
 		return -ENOMEM;
 
 	cdata->tb.tx_buf[0] = addr;
@@ -88,49 +88,48 @@ static int lis2mdl_spi_write(struct st_common_data *cdata,
 	return spi_sync(spi, &msg);
 }
 
-static struct lis2mdl_transfer_function lis2mdl_spi_tf = {
-	.write = lis2mdl_spi_write,
-	.read = lis2mdl_spi_read,
+static struct st_sensor_transfer_function ism303dac_acc_spi_tf = {
+	.write = ism303dac_acc_spi_write,
+	.read = ism303dac_acc_spi_read,
 };
 
 #ifdef CONFIG_PM
-static int lis2mdl_spi_resume(struct device *device)
+static int ism303dac_acc_spi_resume(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct st_common_data *cdata = spi_get_drvdata(spi);
 
-	return lis2mdl_enable(cdata);
+	return ism303dac_acc_enable(cdata);
 }
 
-static int lis2mdl_spi_suspend(struct device *device)
+static int ism303dac_acc_spi_suspend(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct st_common_data *cdata = spi_get_drvdata(spi);
 
-	return lis2mdl_disable(cdata);
+	return ism303dac_acc_disable(cdata);
 }
 
-static const struct dev_pm_ops lis2mdl_spi_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lis2mdl_spi_suspend,
-				lis2mdl_spi_resume)
+static const struct dev_pm_ops ism303dac_acc_spi_pm_ops = {
+	SET_SYSTEM_SLEEP_PM_OPS(ism303dac_acc_spi_suspend,
+				ism303dac_acc_spi_resume)
 };
 #endif /* CONFIG_PM */
 
 #ifdef CONFIG_OF
-static const struct of_device_id lis2mdl_spi_id_table[] = {
-	{ .compatible = "st,lis2mdl", },
-	{ .compatible = "st,iis2mdc", },
+static const struct of_device_id ism303dac_acc_spi_id_table[] = {
+	{ .compatible = "st,ism303dac_acc", },
 	{ },
 };
-MODULE_DEVICE_TABLE(of, lis2mdl_spi_id_table);
+MODULE_DEVICE_TABLE(of, ism303dac_acc_spi_id_table);
 #endif /* CONFIG_OF */
 
-static int lis2mdl_spi_probe(struct spi_device *spi)
+static int ism303dac_acc_spi_probe(struct spi_device *spi)
 {
 	int err;
 	struct st_common_data *cdata;
 
-#ifdef LIS2MDL_DEBUG
+#ifdef ISM303DAC_DEBUG
 	dev_info(&spi->dev, "probe start.\n");
 #endif
 
@@ -141,8 +140,9 @@ static int lis2mdl_spi_probe(struct spi_device *spi)
 		return -ENOMEM;
 	}
 
-	cdata->sensors = (struct lis2mdl_data *) kmalloc(
-						sizeof(struct lis2mdl_data),
+	cdata->sensors = (struct st_sensor_data *) kmalloc(
+						sizeof(struct st_sensor_data) *
+						ISM303DAC_SENSORS_NUMB,
 						GFP_KERNEL);
 	if (!cdata->sensors)
 		return -ENOMEM;
@@ -156,15 +156,15 @@ static int lis2mdl_spi_probe(struct spi_device *spi)
 	cdata->name = spi->modalias;
 	cdata->irq = spi->irq;
 	cdata->bus_type = BUS_SPI;
-	cdata->tf = &lis2mdl_spi_tf;
-	cdata->wai_addr = LIS2MDL_WHO_AM_I_ADDR;
-	cdata->wai_val = LIS2MDL_WHO_AM_I_VAL;
+	cdata->tf = &ism303dac_acc_spi_tf;
+	cdata->wai_addr = ISM303DAC_WHO_AM_I_ADDR;
+	cdata->wai_val = ISM303DAC_WHO_AM_I_DEF;
 
 	mutex_init(&cdata->lock);
 
 	spi_set_drvdata(spi, cdata);
 
-	err = lis2mdl_probe(cdata);
+	err = ism303dac_acc_probe(cdata);
 	if (err < 0) {
 		kfree(cdata);
 
@@ -174,46 +174,45 @@ static int lis2mdl_spi_probe(struct spi_device *spi)
 	return 0;
 }
 
-int lis2mdl_spi_remove(struct spi_device *spi)
+int ism303dac_acc_spi_remove(struct spi_device *spi)
 {
 	struct st_common_data *cdata = spi_get_drvdata(spi);
 
-#ifdef LIS2MDL_DEBUG
+#ifdef ISM303DAC_DEBUG
 	dev_info(cdata->dev, "driver removing\n");
 #endif
 
-	lis2mdl_remove(cdata);
+	ism303dac_acc_remove(cdata);
 	kfree(cdata);
 
 	return 0;
 }
 
-static const struct spi_device_id lis2mdl_spi_id[] = {
-	{ LIS2MDL_DEV_NAME, 0 },
-	{ IIS2MDC_DEV_NAME, 0 },
+static const struct spi_device_id ism303dac_acc_spi_id[] = {
+	{ "ism303dac_acc", 0 },
 	{ },
 };
-MODULE_DEVICE_TABLE(spi, lis2mdl_spi_id);
+MODULE_DEVICE_TABLE(spi, ism303dac_acc_spi_id);
 
-static struct spi_driver lis2mdl_spi_driver = {
+static struct spi_driver ism303dac_acc_spi_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
-		.name = LIS2MDL_DEV_NAME,
+		.name = "ism303dac_acc_spi",
 #ifdef CONFIG_PM
-		.pm = &lis2mdl_spi_pm_ops,
+		.pm = &ism303dac_acc_spi_pm_ops,
 #endif /* CONFIG_PM */
 #ifdef CONFIG_OF
-		.of_match_table = lis2mdl_spi_id_table,
+		.of_match_table = ism303dac_acc_spi_id_table,
 #endif /* CONFIG_OF */
 	},
-	.probe = lis2mdl_spi_probe,
-	.remove = lis2mdl_spi_remove,
-	.id_table = lis2mdl_spi_id,
+	.probe = ism303dac_acc_spi_probe,
+	.remove = ism303dac_acc_spi_remove,
+	.id_table = ism303dac_acc_spi_id,
 };
 
-module_spi_driver(lis2mdl_spi_driver);
+module_spi_driver(ism303dac_acc_spi_driver);
 
-MODULE_DESCRIPTION("lis2mdl spi driver");
+MODULE_DESCRIPTION("ism303dac_acc spi driver");
 MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi@st.com>");
 MODULE_LICENSE("GPL v2");
 

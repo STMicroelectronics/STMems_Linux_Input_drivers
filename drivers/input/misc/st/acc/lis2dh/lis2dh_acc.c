@@ -856,6 +856,11 @@ static void lis2dh_acc_input_work_func(struct work_struct *work)
 	tmpkt = ktime_sub(stat->ktime,
 			  ktime_set(0, 
 			  (lis2dh_acc_get_time_ns() - stat->timestamp)));
+
+	/* Avoid negative value. */
+	if (tmpkt.tv64 < 0)
+		tmpkt = stat->ktime;
+
 	/* Reschedule timer */
 	hrtimer_start(&stat->hr_timer, tmpkt, HRTIMER_MODE_REL);
 	mutex_lock(&stat->lock);

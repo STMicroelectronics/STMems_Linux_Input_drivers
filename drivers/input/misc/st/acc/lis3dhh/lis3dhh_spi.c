@@ -160,6 +160,7 @@ static const struct dev_pm_ops lis3dhh_acc_pm_ops = {
 
 static const struct spi_device_id lis3dhh_acc_ids[] = {
 	{ LIS3DHH_ACC_DEV_NAME, 0 },
+	{ IIS3DHHC_ACC_DEV_NAME, 0 },
 	{ }
 };
 MODULE_DEVICE_TABLE(spi, lis3dhh_acc_ids);
@@ -167,6 +168,7 @@ MODULE_DEVICE_TABLE(spi, lis3dhh_acc_ids);
 #ifdef CONFIG_OF
 static const struct of_device_id lis3dhh_acc_id_table[] = {
 	{ .compatible = "st,lis3dhh", },
+	{ .compatible = "st,iis3dhhc", },
 	{ },
 };
 MODULE_DEVICE_TABLE(of, lis3dhh_acc_id_table);
