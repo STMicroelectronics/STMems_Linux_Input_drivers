@@ -16,6 +16,7 @@
 #define	__LIS3DHH_H__
 
 #define	LIS3DHH_ACC_DEV_NAME		"lis3dhh"
+#define IIS3DHHC_ACC_DEV_NAME		"iis3dhhc"
 
 /* Acc. sensor ODR fixed to 1.1 kHz */
 #define	LIS3DHH_MIN_POLL_PERIOD_NS	909000

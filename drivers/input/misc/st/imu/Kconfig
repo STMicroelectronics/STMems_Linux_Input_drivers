@@ -12,5 +12,6 @@ source "drivers/input/misc/st/imu/lsm9ds1/Kconfig"
 source "drivers/input/misc/st/imu/lsm330dlc/Kconfig"
 source "drivers/input/misc/st/imu/lsm6ds0/Kconfig"
 source "drivers/input/misc/st/imu/lsm330/Kconfig"
+source "drivers/input/misc/st/imu/ism330dlc/Kconfig"
 
 endif # INPUT_IMU
