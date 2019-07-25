@@ -1,0 +1,26 @@
+config INPUT_ASM330LHH
+	tristate "STMicroelectronics ASM330LHH sensor"
+	depends on (I2C || SPI) && SYSFS
+	select INPUT_ASM330LHH_I2C if (I2C)
+	select INPUT_ASM330LHH_SPI if (SPI)
+	help
+	   This driver support the STMicroelectronics ASM330LHH sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called asm330lhh.
+
+config INPUT_ASM330LHH_I2C
+	tristate
+	depends on INPUT_ASM330LHH
+	depends on I2C
+
+config INPUT_ASM330LHH_SPI
+	tristate
+	depends on INPUT_ASM330LHH
+	depends on SPI
+
+config ASM330LHH_IRQ_THREAD
+	bool "Enable support to data ready irq"
+	depends on INPUT_ASM330LHH
+	help
+		Enable irq management on INT_1/INT_2
