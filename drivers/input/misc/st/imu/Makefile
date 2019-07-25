@@ -13,4 +13,5 @@ obj-$(CONFIG_INPUT_LSM6DL0) += lsm6dl0/
 obj-$(CONFIG_INPUT_LSM330) += lsm330/
 obj-$(CONFIG_INPUT_ASM330LXH) += asm330lxh/
 obj-$(CONFIG_INPUT_ISM330DLC) += ism330dlc/
+obj-$(CONFIG_INPUT_ASM330LHH) += asm330lhh/
 
