@@ -1,0 +1,1 @@
+obj-$(CONFIG_INPUT_STTS751) += stts751/

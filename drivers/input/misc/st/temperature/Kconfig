@@ -1,0 +1,9 @@
+
+menuconfig INPUT_TEMPERATURE
+	tristate "Temperature"
+
+if INPUT_TEMPERATURE
+
+source "drivers/input/misc/st/temperature/stts751/Kconfig"
+
+endif # INPUT_TEMPERATURE

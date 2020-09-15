@@ -11,6 +11,7 @@ source "drivers/input/misc/st/humidity/Kconfig"
 source "drivers/input/misc/st/gyro/Kconfig"
 source "drivers/input/misc/st/magnetometer/Kconfig"
 source "drivers/input/misc/st/pressure/Kconfig"
+source "drivers/input/misc/st/temperature/Kconfig"
 source "drivers/input/misc/st/uv/Kconfig"
 
 endif # INPUT_ST
