@@ -5,4 +5,5 @@ obj-$(CONFIG_INPUT_HUMIDITY) += humidity/
 obj-$(CONFIG_INPUT_GYRO) += gyro/
 obj-$(CONFIG_INPUT_MAGN) += magnetometer/
 obj-$(CONFIG_INPUT_PRESSURE) += pressure/
+obj-$(CONFIG_INPUT_TEMPERATURE) += temperature/
 obj-$(CONFIG_INPUT_UV) += uv/

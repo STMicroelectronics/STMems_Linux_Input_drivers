@@ -1,0 +1,9 @@
+config INPUT_STTS751
+         tristate "STM STTS751 sensor"
+         depends on I2C && SYSFS
+         help
+           This driver support the STMicroelectronics STTS751 sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called stts751.
+
