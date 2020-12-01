@@ -21,12 +21,21 @@
 #endif
 
 static const struct {
-	u32 cutoff;
+	u32 cutoff_period_ms;
 	u8 odr;
 } stts751_odr_table[] = {
-	{ 80, 0 },
-	{ 143, 1 },
-	{ 1000, 2 },
+	/* msec, u8 */
+	{ 32, 9 },
+	{ 63, 8 },
+	{ 125, 7 },
+	{ 250, 6 },
+	{ 500, 5 },
+	{ 1000, 4 },
+	{ 2000, 3 },
+	{ 4000, 2 },
+	{ 8000, 1 },
+	{ 16000, 0 },
+
 };
 
 static inline s64 stts751_get_time_ns(void)
@@ -67,7 +76,7 @@ static int stts751_update_odr(struct stts751_dev *dev, u32 poll_interval)
 		return err;
 
 	for (i = ARRAY_SIZE(stts751_odr_table) - 1; i > 0; i--) {
-		if (stts751_odr_table[i].cutoff <= poll_interval)
+		if (stts751_odr_table[i].cutoff_period_ms <= poll_interval)
 			break;
 	}
 
@@ -161,8 +170,14 @@ static int stts751_enable(struct stts751_dev *dev)
 	mutex_lock(&dev->lock);
 	if (!dev->enabled) {
 		err = stts751_device_power_on(dev);
-		schedule_delayed_work(&dev->input_work,
-				      msecs_to_jiffies(dev->poll_interval));
+		if (dev->enabled) {
+			schedule_delayed_work(&dev->input_work,
+			      msecs_to_jiffies(dev->poll_interval));
+		} else {
+			dev_err(dev->dev, "device %s : enable failed\n",
+			dev->input_dev->name);
+		}
+
 	}
 	mutex_unlock(&dev->lock);
 
@@ -186,7 +201,6 @@ static int stts751_disable(struct stts751_dev *dev)
 static void stts751_input_cleanup(struct stts751_dev *dev)
 {
 	input_unregister_device(dev->input_dev);
-	input_free_device(dev->input_dev);
 }
 
 static ssize_t attr_get_polling_rate(struct device *device,
@@ -207,14 +221,14 @@ static ssize_t attr_set_polling_rate(struct device *device,
 				     struct device_attribute *attr,
 				     const char *buf, size_t size)
 {
-	unsigned long val;
+	u32 val;
 	struct stts751_dev *dev = dev_get_drvdata(device);
 
-	if (kstrtoul(buf, 10, &val) || !val)
+	if (kstrtou32(buf, 10, &val) || !val)
 		return -EINVAL;
 
 	mutex_lock(&dev->lock);
-	dev->poll_interval = (u32)val;
+	dev->poll_interval = val;
 	stts751_update_odr(dev, dev->poll_interval);
 	mutex_unlock(&dev->lock);
 
@@ -235,12 +249,18 @@ static ssize_t attr_get_res(struct device *device,
 	return sprintf(buf, "%u\n", val);
 }
 
+static void stts751_get_and_report_data(struct stts751_dev *dev);
+
 static ssize_t attr_set_oneshot(struct device *device,
 				struct device_attribute *attr,
 				const char *buf, size_t size)
 {
 	unsigned long val;
+	int err = 0;
+	bool enabled = true;
+	u8 random_data = 0xaf;
 	struct stts751_dev *dev = dev_get_drvdata(device);
+	struct i2c_client *client = to_i2c_client(dev->dev);
 
 	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
@@ -249,9 +269,18 @@ static ssize_t attr_set_oneshot(struct device *device,
 		return -EINVAL;
 
 	mutex_lock(&dev->lock);
+	if (!dev->enabled)
+		enabled = false;
+		err = i2c_smbus_write_byte_data(client, REG_ONE_SHOT_ADDR, random_data);
+		stts751_get_and_report_data(dev);
 	mutex_unlock(&dev->lock);
 
-	return size;
+	if (enabled)
+		return -EBUSY;
+	if (err < 0)
+		return err;
+	else
+		return size;
 }
 
 static ssize_t attr_get_enable(struct device *device,
@@ -356,13 +385,9 @@ static void stts751_report_data(struct stts751_dev *dev, int data,
 	input_sync(dev->input_dev);
 }
 
-static void stts751_input_work_fn(struct work_struct *work)
+static void stts751_get_and_report_data(struct stts751_dev *dev)
 {
 	int err, data;
-	struct stts751_dev *dev;
-
-	dev = container_of((struct delayed_work *)work,
-			   struct stts751_dev, input_work);
 
 	mutex_lock(&dev->lock);
 
@@ -373,9 +398,21 @@ static void stts751_input_work_fn(struct work_struct *work)
 		stts751_report_data(dev, data, stts751_get_time_ns());
 
 	mutex_unlock(&dev->lock);
+}
 
-	schedule_delayed_work(&dev->input_work,
-			      msecs_to_jiffies(dev->poll_interval));
+static void stts751_input_work_fn(struct work_struct *work)
+{
+	struct stts751_dev *dev;
+
+	dev = container_of((struct delayed_work *)work,
+			   struct stts751_dev, input_work);
+
+	stts751_get_and_report_data(dev);
+
+	if (dev->enabled) {
+		schedule_delayed_work(&dev->input_work,
+			msecs_to_jiffies(dev->poll_interval));
+	}
 }
 
 #ifdef CONFIG_PM
@@ -420,7 +457,7 @@ static int stts751_probe(struct i2c_client *client,
 	mutex_init(&dev->lock);
 	mutex_lock(&dev->lock);
 
-	dev->poll_interval = 100;
+	dev->poll_interval = STTS751_DEFAULT_POLL_PERIOD_MS;
 
 	err =  stts751_hw_init(dev);
 	if (err < 0) {
@@ -428,7 +465,7 @@ static int stts751_probe(struct i2c_client *client,
 		goto unlock;
 	}
 
-	err = stts751_update_odr(dev, STTS751_DEFAULT_POLL_PERIOD_MS);
+	err = stts751_update_odr(dev, dev->poll_interval);
 	if (err < 0) {
 		dev_err(dev->dev, "set odr failed: %d\n", err);
 		goto unlock;
@@ -455,7 +492,7 @@ static int stts751_probe(struct i2c_client *client,
 	err = stts751_device_power_off(dev);
 	if (err < 0) {
 		dev_err(dev->dev, "power off failed: %d\n", err);
-		goto input_cleanup;
+		goto sysfs_remove;
 	}
 
 	INIT_DELAYED_WORK(&dev->input_work, stts751_input_work_fn);
@@ -463,6 +500,9 @@ static int stts751_probe(struct i2c_client *client,
 	mutex_unlock(&dev->lock);
 
 	return 0;
+
+sysfs_remove:
+	stts751_sysfs_remove(dev->dev);
 
 input_cleanup:
 	stts751_input_cleanup(dev);
@@ -481,6 +521,8 @@ unlock:
 static int stts751_remove(struct i2c_client *client)
 {
 	struct stts751_dev *dev = i2c_get_clientdata(client);
+
+	dev_info(dev->dev, "removing device %s\n", dev->input_dev->name);
 
 	cancel_delayed_work_sync(&dev->input_work);
 	stts751_device_power_off(dev);
