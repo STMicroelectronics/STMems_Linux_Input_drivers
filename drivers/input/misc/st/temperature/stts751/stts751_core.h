@@ -19,13 +19,14 @@
 
 #define MS_TO_NS(x)			((x) * 1000000L)
 
-#define STTS751_DEFAULT_POLL_PERIOD_MS	10
+#define STTS751_DEFAULT_POLL_PERIOD_MS	1000
 
 #define REG_VAL_HIGH_ADDR		0x00
 #define REG_STATUS_ADDR			0x01
 #define REG_VAL_LOW_ADDR		0x02
 #define REG_CONF_ADDR			0x03
 #define REG_CONV_RATE_ADDR		0x04
+#define REG_ONE_SHOT_ADDR		0x0F
 
 #define REG_PROD_ID_ADDR		0xfd
 #define REG_MAN_ID_ADDR			0xfe
@@ -45,7 +46,7 @@ struct stts751_dev {
 	struct mutex lock;
 	const char *name;
 
-	u8 poll_interval;
+	u32 poll_interval;
 	bool enabled;
 	u8 odr, res;
 };
