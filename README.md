@@ -13,7 +13,7 @@ This repository contains Linux kernel (v3.10, v3.4) with STMicroelectronics MEMS
 ### Inertial Module Unit (IMU):
 
 > LSM330, LSM330DLC, LSM6DS0,
-> LSM6DS3, LSM6DSL, LSM6DSM, LSM9DS0, LSM9DS1, ISM330DLC
+> LSM6DS3, LSM6DSL, LSM6DSM, LSM9DS0, LSM9DS1, ISM330DLC,
 > ASM330LHH
 
 ### eCompass:
