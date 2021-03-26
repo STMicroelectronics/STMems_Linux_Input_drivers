@@ -24,7 +24,7 @@ This repository contains Linux kernel (v3.10, v3.4) with STMicroelectronics MEMS
 
 > AIS328DQ, AIS3624DQ, H3LIS100DL, H3LIS331DL, LIS2DE, LIS2DE12,
 > LIS2DH, LIS2DH12, LIS2DS12, LIS2HH12, LIS331DLH, LIS331HH,
-> LIS3DE, LIS3DH, LIS3DSH, N2DM, LIS2DW12, LIS3DHH, IIS3DHHC, IIS2DH
+> LIS3DE, LIS3DH, LIS3DSH, LIS2DW12, LIS3DHH, IIS3DHHC, IIS2DH
 
 ### Gyroscope:
 
@@ -86,11 +86,11 @@ In order to explain how to integrate STM sensors in a different kernel, please c
 
 > *- interrupts*: interrupt mapping for IRQ as documented in [interrupts][4]
 
-> 
+>
 >**Recommended properties for SPI bus usage:**
 
 > *- spi-max-frequency*: maximum SPI bus frequency as documented in [SPI][3]
-> 
+>
 > **Optional properties:**
 
 > *- st,drdy-int-pin*: MEMS sensor interrupt line to use (default 1)
@@ -133,7 +133,7 @@ Configure kernel with *make menuconfig* (alternatively use *make xconfig* or *ma
 >				<*>   STM MEMs Device Drivers  --->
 >					<M>   Inertial motion unit  --->
 >						<M>   STMicroelectronics LSM6DSM sensor
->		
+>
 
 
 More Information
