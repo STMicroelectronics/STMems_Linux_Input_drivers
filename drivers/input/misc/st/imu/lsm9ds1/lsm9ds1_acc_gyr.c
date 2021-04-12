@@ -1638,12 +1638,12 @@ static struct kobj_attribute aa_filter_attr  =
 	__ATTR(anti_aliasing_frequency, 0664, attr_get_aa_filter,
 							attr_set_aa_filter);
 static struct kobj_attribute poll_attr_gyr =
-	__ATTR(pollrate_ms, 0666, attr_get_polling_rate_gyr,
+	__ATTR(pollrate_ms, 0664, attr_get_polling_rate_gyr,
 						attr_set_polling_rate_gyr);
 static struct kobj_attribute enable_attr_gyr =
-	__ATTR(enable_device, 0666, attr_get_enable_gyr, attr_set_enable_gyr);
+	__ATTR(enable_device, 0664, attr_get_enable_gyr, attr_set_enable_gyr);
 static struct kobj_attribute range_attr_gyr =
-	__ATTR(range, 0666, attr_get_range_gyr, attr_set_range_gyr);
+	__ATTR(range, 0664, attr_get_range_gyr, attr_set_range_gyr);
 
 static struct attribute *attributes_acc[] = {
 	&poll_attr_acc.attr,

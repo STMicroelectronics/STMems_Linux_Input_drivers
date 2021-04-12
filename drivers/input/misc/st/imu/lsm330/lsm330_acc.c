@@ -1436,12 +1436,12 @@ static ssize_t attr_addr_set(struct device *dev, struct device_attribute *attr,
 
 static struct device_attribute attributes[] = {
 
-	__ATTR(pollrate_ms, 0666, attr_get_polling_rate,
+	__ATTR(pollrate_ms, 0664, attr_get_polling_rate,
 							attr_set_polling_rate),
-	__ATTR(range, 0666, attr_get_range, attr_set_range),
-	__ATTR(enable_device, 0666, attr_get_enable, attr_set_enable),
-	__ATTR(enable_polling, 0666, attr_get_enable_polling, attr_set_enable_polling),
-	__ATTR(enable_state_prog, 0666, attr_get_enable_state_prog,
+	__ATTR(range, 0664, attr_get_range, attr_set_range),
+	__ATTR(enable_device, 0664, attr_get_enable, attr_set_enable),
+	__ATTR(enable_polling, 0664, attr_get_enable_polling, attr_set_enable_polling),
+	__ATTR(enable_state_prog, 0664, attr_get_enable_state_prog,
 						attr_set_enable_state_prog),
 #ifdef LSM330_DEBUG
 	__ATTR(reg_value, 0600, attr_reg_get, attr_reg_set),

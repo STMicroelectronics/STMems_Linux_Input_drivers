@@ -598,9 +598,9 @@ static ssize_t attr_addr_set(struct device *dev, struct device_attribute *attr,
 #endif /* LSM303DLHC_DEBUG */
 
 static struct device_attribute attributes[] = {
-	__ATTR(pollrate_ms, 0666, attr_get_polling_rate, attr_set_polling_rate),
-	__ATTR(range, 0666, attr_get_range, attr_set_range),
-	__ATTR(enable_device, 0666, attr_get_enable, attr_set_enable),
+	__ATTR(pollrate_ms, 0664, attr_get_polling_rate, attr_set_polling_rate),
+	__ATTR(range, 0664, attr_get_range, attr_set_range),
+	__ATTR(enable_device, 0664, attr_get_enable, attr_set_enable),
 #ifdef LSM303DLHC_DEBUG
 	__ATTR(reg_value, 0600, attr_reg_get, attr_reg_set),
 	__ATTR(reg_addr, 0200, NULL, attr_addr_set),

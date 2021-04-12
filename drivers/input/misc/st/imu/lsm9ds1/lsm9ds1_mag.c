@@ -799,12 +799,12 @@ out:
 #endif
 
 static struct device_attribute attributes[] = {
-	__ATTR(pollrate_ms, 0666, attr_get_polling_rate_mag,
+	__ATTR(pollrate_ms, 0664, attr_get_polling_rate_mag,
 						attr_set_polling_rate_mag),
-	__ATTR(range, 0666, attr_get_range_mag, attr_set_range_mag),
-	__ATTR(enable_device, 0666, attr_get_enable_mag, attr_set_enable_mag),
-	__ATTR(x_y_opearative_mode, 0666, attr_get_xy_mode, attr_set_xy_mode),
-	__ATTR(z_opearative_mode, 0666, attr_get_z_mode, attr_set_z_mode),
+	__ATTR(range, 0664, attr_get_range_mag, attr_set_range_mag),
+	__ATTR(enable_device, 0664, attr_get_enable_mag, attr_set_enable_mag),
+	__ATTR(x_y_opearative_mode, 0664, attr_get_xy_mode, attr_set_xy_mode),
+	__ATTR(z_opearative_mode, 0664, attr_get_z_mode, attr_set_z_mode),
 
 };
 

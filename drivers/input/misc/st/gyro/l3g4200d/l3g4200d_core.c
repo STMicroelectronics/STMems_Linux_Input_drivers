@@ -556,11 +556,11 @@ static ssize_t attr_addr_set(struct device *dev, struct device_attribute *attr,
 #endif /* DEBUG */
 
 static struct device_attribute attributes[] = {
-	__ATTR(pollrate_ms, 0666, attr_polling_rate_show,
+	__ATTR(pollrate_ms, 0664, attr_polling_rate_show,
 	       attr_polling_rate_store),
-	__ATTR(range, 0666, attr_range_show, attr_range_store),
-	__ATTR(enable_device, 0666, attr_enable_show, attr_enable_store),
-	__ATTR(enable_selftest, 0666, attr_get_selftest, attr_set_selftest),
+	__ATTR(range, 0664, attr_range_show, attr_range_store),
+	__ATTR(enable_device, 0664, attr_enable_show, attr_enable_store),
+	__ATTR(enable_selftest, 0664, attr_get_selftest, attr_set_selftest),
 #ifdef DEBUG
 	__ATTR(reg_value, 0600, attr_reg_get, attr_reg_set),
 	__ATTR(reg_addr, 0200, NULL, attr_addr_set),

@@ -909,9 +909,9 @@ static ssize_t attr_addr_set(struct device *device, struct device_attribute *att
 
 static struct device_attribute attributes[] = {
 
-	__ATTR(pollrate_ms, 0666, attr_get_polling_rate, attr_set_polling_rate),
-	__ATTR(range, 0666, attr_get_range, attr_set_range),
-	__ATTR(enable_device, 0666, attr_get_enable, attr_set_enable),
+	__ATTR(pollrate_ms, 0664, attr_get_polling_rate, attr_set_polling_rate),
+	__ATTR(range, 0664, attr_get_range, attr_set_range),
+	__ATTR(enable_device, 0664, attr_get_enable, attr_set_enable),
 	__ATTR(int1_config, 0664, attr_get_intconfig1, attr_set_intconfig1),
 	__ATTR(int1_duration, 0664, attr_get_duration1, attr_set_duration1),
 	__ATTR(int1_thresholdx, 0664, attr_get_threshx1, attr_set_threshx1),
