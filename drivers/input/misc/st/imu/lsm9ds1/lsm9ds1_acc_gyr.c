@@ -1278,7 +1278,7 @@ static ssize_t attr_set_polling_rate_acc(struct kobject *kobj,
 	struct lsm9ds1_acc_gyr_dev *dev = dev_get_drvdata(device);
 	unsigned long interval_ms;
 
-	if (strict_strtoul(buf, 10, &interval_ms))
+	if (kstrtoul(buf, 10, &interval_ms))
 		return -EINVAL;
 	if (!interval_ms)
 		return -EINVAL;
@@ -1329,7 +1329,7 @@ static ssize_t attr_set_enable_acc(struct kobject *kobj,
 	struct lsm9ds1_acc_gyr_dev *dev = dev_get_drvdata(device);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -1378,7 +1378,7 @@ static ssize_t attr_set_range_acc(struct kobject *kobj,
 	u8 range;
 	int err;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	switch (val) {
@@ -1452,7 +1452,7 @@ static ssize_t attr_set_aa_filter(struct kobject *kobj,
 	u8 frequency;
 	int err;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	switch (val) {
@@ -1513,7 +1513,7 @@ static ssize_t attr_set_polling_rate_gyr(struct kobject *kobj,
 	struct lsm9ds1_acc_gyr_dev *dev = dev_get_drvdata(device);
 	unsigned long interval_ms;
 
-	if (strict_strtoul(buf, 10, &interval_ms))
+	if (kstrtoul(buf, 10, &interval_ms))
 		return -EINVAL;
 	if (!interval_ms)
 		return -EINVAL;
@@ -1549,7 +1549,7 @@ static ssize_t attr_set_enable_gyr(struct kobject *kobj,
 	struct lsm9ds1_acc_gyr_dev *dev = dev_get_drvdata(device);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -1597,7 +1597,7 @@ static ssize_t attr_set_range_gyr(struct kobject *kobj,
 	u8 range;
 	int err;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	switch (val) {

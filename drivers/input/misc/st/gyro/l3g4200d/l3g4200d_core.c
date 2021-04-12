@@ -388,7 +388,7 @@ static ssize_t attr_polling_rate_store(struct device *dev,
 	struct l3g4200d_data *gyro = dev_get_drvdata(dev);
 	unsigned long interval_ms;
 
-	if (strict_strtoul(buf, 10, &interval_ms))
+	if (kstrtoul(buf, 10, &interval_ms))
 		return -EINVAL;
 
 	if (!interval_ms)
@@ -436,7 +436,7 @@ static ssize_t attr_range_store(struct device *dev,
 	struct l3g4200d_data *gyro = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	mutex_lock(&gyro->lock);
@@ -463,7 +463,7 @@ static ssize_t attr_enable_store(struct device *dev,
 	struct l3g4200d_data *gyro = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -494,7 +494,7 @@ static ssize_t attr_set_selftest(struct device *dev,
 	struct l3g4200d_data *gyro = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	l3g4200d_selftest(gyro, val);
@@ -510,7 +510,7 @@ static ssize_t attr_reg_set(struct device *dev, struct device_attribute *attr,
 	u8 x;
 	unsigned long val;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	x = val;
@@ -542,7 +542,7 @@ static ssize_t attr_addr_set(struct device *dev, struct device_attribute *attr,
 	struct l3g4200d_data *gyro = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	mutex_lock(&gyro->lock);

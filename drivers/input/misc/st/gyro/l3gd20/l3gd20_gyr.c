@@ -714,7 +714,7 @@ static ssize_t attr_polling_rate_store(struct device *dev,
 	struct l3gd20_gyr_status *stat = dev_get_drvdata(dev);
 	unsigned long interval_ms;
 
-	if (strict_strtoul(buf, 10, &interval_ms))
+	if (kstrtoul(buf, 10, &interval_ms))
 		return -EINVAL;
 	if (!interval_ms)
 		return -EINVAL;
@@ -765,7 +765,7 @@ static ssize_t attr_range_store(struct device *dev,
 	unsigned long val;
 	u8 range;
 	int err;
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 	switch (val) {
 	case 250:
@@ -806,7 +806,7 @@ static ssize_t attr_enable_store(struct device *dev,
 	struct l3gd20_gyr_status *stat = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -837,7 +837,7 @@ static ssize_t attr_polling_mode_store(struct device *dev,
 	struct l3gd20_gyr_status *stat = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	mutex_lock(&stat->lock);
@@ -868,7 +868,7 @@ static ssize_t attr_watermark_store(struct device *dev,
 	unsigned long watermark;
 	int res;
 
-	if (strict_strtoul(buf, 16, &watermark))
+	if (kstrtoul(buf, 16, &watermark))
 		return -EINVAL;
 
 	res = l3gd20_gyr_update_watermark(stat, watermark);
@@ -894,7 +894,7 @@ static ssize_t attr_fifomode_store(struct device *dev,
 	unsigned long fifomode;
 	int res;
 
-	if (strict_strtoul(buf, 16, &fifomode))
+	if (kstrtoul(buf, 16, &fifomode))
 		return -EINVAL;
 	/* if (!fifomode)
 		return -EINVAL; */
@@ -927,7 +927,7 @@ static ssize_t attr_reg_set(struct device *dev, struct device_attribute *attr,
 	u8 x[2];
 	unsigned long val;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 	mutex_lock(&stat->lock);
 	x[0] = val;
@@ -959,7 +959,7 @@ static ssize_t attr_addr_set(struct device *dev, struct device_attribute *attr,
 	struct l3gd20_gyr_status *stat = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	mutex_lock(&stat->lock);

@@ -576,7 +576,7 @@ static int write_reg(struct device *dev, const char *buf, u8 reg)
 	u8 x;
 	unsigned long val;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	x = val;
@@ -605,7 +605,7 @@ static ssize_t attr_set_polling_rate(struct device *dev,
 	struct lis331hh_data *acc = dev_get_drvdata(dev);
 	unsigned long interval_ms;
 
-	if (strict_strtoul(buf, 10, &interval_ms))
+	if (kstrtoul(buf, 10, &interval_ms))
 		return -EINVAL;
 	if (!interval_ms)
 		return -EINVAL;
@@ -650,7 +650,7 @@ static ssize_t attr_set_range(struct device *dev,
 	struct lis331hh_data *acc = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	mutex_lock(&acc->lock);
@@ -676,7 +676,7 @@ static ssize_t attr_set_enable(struct device *dev,
 	struct lis331hh_data *acc = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -707,7 +707,7 @@ static ssize_t attr_set_selftest(struct device *dev,
 	struct lis331hh_data *acc = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	lis331hh_selftest(acc, val);
@@ -862,7 +862,7 @@ static ssize_t attr_addr_set(struct device *dev, struct device_attribute *attr,
 	struct lis331hh_data *acc = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	mutex_lock(&acc->lock);

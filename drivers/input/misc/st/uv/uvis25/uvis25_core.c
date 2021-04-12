@@ -278,7 +278,7 @@ static ssize_t attr_set_polling_rate(struct device *dev,
 	struct uvis25_data *stat = dev_get_drvdata(dev);
 	unsigned long interval_ms;
 
-	if (strict_strtoul(buf, 10, &interval_ms))
+	if (kstrtoul(buf, 10, &interval_ms))
 		return -EINVAL;
 	if (!interval_ms)
 		return -EINVAL;
@@ -309,7 +309,7 @@ static ssize_t attr_set_enable(struct device *dev,
 	struct uvis25_data *stat = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	mutex_lock(&stat->lock);

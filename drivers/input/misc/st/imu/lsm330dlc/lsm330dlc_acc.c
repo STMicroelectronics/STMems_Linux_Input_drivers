@@ -592,7 +592,7 @@ static int write_reg(struct device *device, const char *buf, u8 reg, u8 mask,
 	struct lsm330dlc_acc_dev *dev = dev_get_drvdata(device);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	mutex_unlock(&dev->lock);
@@ -629,7 +629,7 @@ static ssize_t attr_set_polling_rate(struct device *device,
 	unsigned long interval_ms;
 	struct lsm330dlc_acc_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &interval_ms) || !interval_ms)
+	if (kstrtoul(buf, 10, &interval_ms) || !interval_ms)
 		return -EINVAL;
 
 	interval_ms = max((unsigned int)interval_ms, dev->pdata->min_interval);
@@ -677,7 +677,7 @@ static ssize_t attr_set_range(struct device *device,
 	u8 range;
 	struct lsm330dlc_acc_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	switch (val) {
@@ -725,7 +725,7 @@ static ssize_t attr_set_enable(struct device *device,
 	unsigned long val;
 	struct lsm330dlc_acc_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -872,7 +872,7 @@ static ssize_t attr_reg_set(struct device *device,
 	u8 data;
 	struct lsm330dlc_acc_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	/*TODO: error need to be managed */
@@ -906,7 +906,7 @@ static ssize_t attr_addr_set(struct device *device,
 	unsigned long val;
 	struct lsm330dlc_acc_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	mutex_lock(&dev->lock);

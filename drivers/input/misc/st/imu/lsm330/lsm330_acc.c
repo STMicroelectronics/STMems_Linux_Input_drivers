@@ -1140,7 +1140,7 @@ static ssize_t attr_set_enable_polling(struct device *dev,
 	struct lsm330_acc_data *acc = dev_get_drvdata(dev);
 	unsigned long enable;
 
-	if (strict_strtoul(buf, 10, &enable))
+	if (kstrtoul(buf, 10, &enable))
 		return -EINVAL;
 	mutex_lock(&acc->lock);
 	if (enable)
@@ -1172,7 +1172,7 @@ static ssize_t attr_set_polling_rate(struct device *dev,
 	struct lsm330_acc_data *acc = dev_get_drvdata(dev);
 	unsigned long interval_ms;
 
-	if (strict_strtoul(buf, 10, &interval_ms))
+	if (kstrtoul(buf, 10, &interval_ms))
 		return -EINVAL;
 	if (!interval_ms)
 		return -EINVAL;
@@ -1223,7 +1223,7 @@ static ssize_t attr_set_range(struct device *dev,
 	struct lsm330_acc_data *acc = dev_get_drvdata(dev);
 	unsigned long val;
 	u8 range;
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	switch(val) {
@@ -1271,7 +1271,7 @@ static ssize_t attr_set_enable(struct device *dev,
 	struct lsm330_acc_data *acc = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -1340,7 +1340,7 @@ static ssize_t attr_set_enable_state_prog(struct device *dev,
 	struct lsm330_acc_data *acc = dev_get_drvdata(dev);
 	long val=0;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 
@@ -1392,7 +1392,7 @@ static ssize_t attr_reg_set(struct device *dev, struct device_attribute *attr,
 	u8 x[1];
 	unsigned long val;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 	mutex_lock(&acc->lock);
 	x[0] = val;
@@ -1425,7 +1425,7 @@ static ssize_t attr_addr_set(struct device *dev, struct device_attribute *attr,
 {
 	struct lsm330_acc_data *acc = dev_get_drvdata(dev);
 	unsigned long val;
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 	mutex_lock(&acc->lock);
 	acc->reg_addr = val;

@@ -567,7 +567,7 @@ static ssize_t attr_polling_rate_store(struct device *device,
 	unsigned long interval_ms;
 	struct lsm330dlc_gyr_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &interval_ms) || !interval_ms)
+	if (kstrtoul(buf, 10, &interval_ms) || !interval_ms)
 		return -EINVAL;
 
 	interval_ms = max((unsigned int)interval_ms, dev->pdata->min_interval);
@@ -612,7 +612,7 @@ static ssize_t attr_range_store(struct device *device,
 	unsigned long val;
 	struct lsm330dlc_gyr_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	switch (val) {
@@ -656,7 +656,7 @@ static ssize_t attr_enable_store(struct device *device,
 	unsigned long val;
 	struct lsm330dlc_gyr_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -675,7 +675,7 @@ static ssize_t attr_watermark_store(struct device *device,
 	unsigned long watermark;
 	struct lsm330dlc_gyr_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 16, &watermark))
+	if (kstrtoul(buf, 16, &watermark))
 		return -EINVAL;
 
 	res = lsm330dlc_gyr_update_watermark(dev, watermark);
@@ -703,7 +703,7 @@ static ssize_t attr_fifomode_store(struct device *device,
 	unsigned long fifomode;
 	int res;
 
-	if (strict_strtoul(buf, 16, &fifomode))
+	if (kstrtoul(buf, 16, &fifomode))
 		return -EINVAL;
 
 	mutex_lock(&dev->lock);
@@ -731,7 +731,7 @@ static ssize_t attr_reg_set(struct device *device,
 	unsigned long val;
 	struct lsm330dlc_gyr_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	mutex_lock(&dev->lock);
@@ -761,7 +761,7 @@ static ssize_t attr_addr_set(struct device *device, struct device_attribute *att
 	unsigned long val;
 	struct lsm330dlc_gyr_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	mutex_lock(&dev->lock);

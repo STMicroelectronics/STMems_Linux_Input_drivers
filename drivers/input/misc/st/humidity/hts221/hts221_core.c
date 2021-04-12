@@ -16,10 +16,6 @@
 
 #include "hts221_core.h"
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 0, 0)
-#define	kstrtoul(x, y, z) strict_strtoul(x, y, z)
-#endif
-
 #define MS_TO_NS(x)		((x) *1000000L)
 
 #define REG_WHOAMI_ADDR		0x0f  /* Who am i address register */

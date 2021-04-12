@@ -664,7 +664,7 @@ static int write_reg(struct device *dev, const char *buf, u8 reg,
 	u8 new_val;
 	unsigned long val;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	new_val = ((u8) val & mask);
@@ -700,7 +700,7 @@ static ssize_t attr_set_polling_rate(struct device *dev,
 	struct lis2hh12_status *stat = dev_get_drvdata(dev);
 	unsigned long interval_ms;
 
-	if (strict_strtoul(buf, 10, &interval_ms))
+	if (kstrtoul(buf, 10, &interval_ms))
 		return -EINVAL;
 	if (!interval_ms)
 		return -EINVAL;
@@ -753,7 +753,7 @@ static ssize_t attr_set_range(struct device *dev,
 	u8 range;
 	int err;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 	switch (val) {
 	case 2:
@@ -799,7 +799,7 @@ static ssize_t attr_set_enable(struct device *dev,
 	struct lis2hh12_status *stat = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -891,7 +891,7 @@ static ssize_t attr_reg_set(struct device *dev, struct device_attribute *attr,
 	u8 x;
 	unsigned long val;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	x = val;
@@ -920,7 +920,7 @@ static ssize_t attr_addr_set(struct device *dev, struct device_attribute *attr,
 	struct lis2hh12_status *stat = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	mutex_lock(&stat->lock);

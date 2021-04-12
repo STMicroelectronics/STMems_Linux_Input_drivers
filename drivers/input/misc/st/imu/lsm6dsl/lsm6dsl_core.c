@@ -1112,7 +1112,7 @@ static ssize_t set_enable(struct device *dev, struct device_attribute *attr,
 	struct lsm6dsl_sensor_data *sdata = dev_get_drvdata(dev);
 	unsigned long enable;
 
-	if (strict_strtoul(buf, 10, &enable))
+	if (kstrtoul(buf, 10, &enable))
 		return -EINVAL;
 
 	if (enable)

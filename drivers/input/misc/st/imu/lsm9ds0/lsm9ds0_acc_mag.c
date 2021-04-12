@@ -1285,7 +1285,7 @@ static ssize_t attr_set_polling_rate_acc(struct kobject *kobj,
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 	unsigned long interval_ms;
 
-	if (strict_strtoul(buf, 10, &interval_ms) || !interval_ms)
+	if (kstrtoul(buf, 10, &interval_ms) || !interval_ms)
 		return -EINVAL;
 	interval_ms = (unsigned int)max((unsigned int)interval_ms,
 						dev->pdata_acc->min_interval);
@@ -1305,7 +1305,7 @@ static ssize_t attr_set_polling_rate_mag(struct kobject *kobj,
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 	unsigned long interval_ms;
 
-	if (strict_strtoul(buf, 10, &interval_ms) || !interval_ms)
+	if (kstrtoul(buf, 10, &interval_ms) || !interval_ms)
 		return -EINVAL;
 	interval_ms = (unsigned int)max((unsigned int)interval_ms,
 					dev->pdata_mag->min_interval);
@@ -1345,7 +1345,7 @@ static ssize_t attr_set_enable_acc(struct kobject *kobj,
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -1364,7 +1364,7 @@ static ssize_t attr_set_enable_mag(struct kobject *kobj,
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -1440,7 +1440,7 @@ static ssize_t attr_set_range_acc(struct kobject *kobj,
 	unsigned long val;
 	u8 range;
 	int err;
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 	switch (val) {
 	case 2:
@@ -1483,7 +1483,7 @@ static ssize_t attr_set_range_mag(struct kobject *kobj,
 	unsigned long val;
 	u8 range;
 	int err;
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 	switch (val) {
 	case 2:
@@ -1555,7 +1555,7 @@ static ssize_t attr_set_aa_filter(struct kobject *kobj,
 	u8 frequency;
 	int err;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 	switch (val) {
 	case FILTER_50:
@@ -1605,7 +1605,7 @@ static ssize_t attr_set_temp_enable(struct device *device,
 	unsigned long val;
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	atomic_set(&dev->enabled_temp, (int)val);
@@ -1784,7 +1784,7 @@ static ssize_t attr_set_gen1_status(struct kobject *kobj,
 	struct device *device = to_dev(kobj->parent);
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if(strcmp(attr->attr.name, "pin1_enable") == 0) {
@@ -1824,7 +1824,7 @@ static ssize_t attr_set_gen2_status(struct kobject *kobj,
 	struct device *device = to_dev(kobj->parent);
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if(strcmp(attr->attr.name, "pin1_enable") == 0) {
@@ -1859,7 +1859,7 @@ static ssize_t attr_set_gen1_duration(struct kobject *kobj,
 	struct device *device = to_dev(kobj->parent);
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	err = write_duration_threshold_int(dev,
@@ -1889,7 +1889,7 @@ static ssize_t attr_set_gen2_duration(struct kobject *kobj,
 	struct device *device = to_dev(kobj->parent);
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	err = write_duration_threshold_int(dev,
@@ -1919,7 +1919,7 @@ static ssize_t attr_set_gen1_threshold(struct kobject *kobj,
 	struct device *device = to_dev(kobj->parent);
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	err = write_duration_threshold_int(dev,
@@ -1949,7 +1949,7 @@ static ssize_t attr_set_gen2_threshold(struct kobject *kobj,
 	struct device *device = to_dev(kobj->parent);
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	err = write_duration_threshold_int(dev,
@@ -1984,7 +1984,7 @@ static ssize_t attr_set_gen_mag_status(struct kobject *kobj,
 	struct device *device = to_dev(kobj->parent);
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if(strcmp(attr->attr.name, "pin1_enable") == 0) {
@@ -2029,7 +2029,7 @@ static ssize_t attr_set_gen_mag_threshold(struct kobject *kobj,
 	struct device *device = to_dev(kobj->parent);
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	err = write_threshold_mag_int(dev,
@@ -2136,7 +2136,7 @@ static ssize_t attr_set_gen1_axis(struct kobject *kobj,
 	struct device *device = to_dev(kobj->parent);
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	err = set_axis(dev, 1, attr->attr.name, val);
@@ -2167,7 +2167,7 @@ static ssize_t attr_set_gen2_axis(struct kobject *kobj,
 	struct device *device = to_dev(kobj->parent);
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	err = set_axis(dev, 2, attr->attr.name, val);
@@ -2198,7 +2198,7 @@ static ssize_t attr_set_gen_mag_axis(struct kobject *kobj,
 	struct device *device = to_dev(kobj->parent);
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	err = set_axis(dev, 3, attr->attr.name, val);
@@ -2229,7 +2229,7 @@ static ssize_t attr_set_gen1_and_or(struct kobject *kobj,
 	struct device *device = to_dev(kobj->parent);
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	err = write_gen_int(dev, &(dev->interrupt->gen1_and_or), (int)val);
@@ -2260,7 +2260,7 @@ static ssize_t attr_set_gen2_and_or(struct kobject *kobj,
 	struct device *device = to_dev(kobj->parent);
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	err = write_gen_int(dev, &(dev->interrupt->gen2_and_or), (int)val);
@@ -2279,7 +2279,7 @@ static ssize_t attr_set_pin_conf(struct device *device,
 
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	err = write_gen_int(dev,
@@ -2310,7 +2310,7 @@ static ssize_t attr_set_interrupt_polarity(struct device *device,
 
 	struct lsm9ds0_dev *dev = dev_get_drvdata(device);
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	err = write_gen_int(dev,

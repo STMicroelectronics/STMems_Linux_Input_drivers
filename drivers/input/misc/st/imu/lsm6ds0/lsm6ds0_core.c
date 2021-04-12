@@ -1534,7 +1534,7 @@ static ssize_t set_polling_rate_acc(struct device *dev, struct device_attribute 
 	struct lsm6ds0_status *sdata = dev_get_drvdata(dev);
 	unsigned long interval_us, interval_ms;
 
-	if (strict_strtoul(buf, 10, &interval_ms))
+	if (kstrtoul(buf, 10, &interval_ms))
 		return -EINVAL;
 	if (!interval_ms)
 		return -EINVAL;
@@ -1576,7 +1576,7 @@ static ssize_t set_enable_acc(struct device *dev, struct device_attribute *attr,
 	struct lsm6ds0_status *sdata = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -1620,7 +1620,7 @@ static ssize_t set_range_acc(struct device *dev, struct device_attribute *attr,
 	uint8_t range;
 	int32_t err;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	switch (val) {
@@ -1690,7 +1690,7 @@ static ssize_t set_aa_filter(struct device *dev, struct device_attribute *attr,
 	uint8_t frequency;
 	int32_t err;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	switch (val) {
@@ -1762,7 +1762,7 @@ static ssize_t set_polling_rate_gyr(struct device *dev, struct device_attribute 
 	struct lsm6ds0_status *sdata = dev_get_drvdata(dev);
 	unsigned long interval_us, interval_ms;
 
-	if (strict_strtoul(buf, 10, &interval_ms))
+	if (kstrtoul(buf, 10, &interval_ms))
 		return -EINVAL;
 	if (!interval_ms)
 		return -EINVAL;
@@ -1790,7 +1790,7 @@ static ssize_t set_enable_gyr(struct device *dev, struct device_attribute *attr,
 	struct lsm6ds0_status *sdata = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -1834,7 +1834,7 @@ static ssize_t set_range_gyr(struct device *dev, struct device_attribute *attr,
 	uint8_t range;
 	int32_t err = -1;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	switch (val) {
@@ -1883,7 +1883,7 @@ static ssize_t set_pmode(struct device *dev, struct device_attribute *attr,
 	struct lsm6ds0_status *sdata = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	lsm6ds0_acc_change_pm_state(sdata, val);

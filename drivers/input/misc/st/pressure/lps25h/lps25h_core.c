@@ -593,7 +593,7 @@ static ssize_t attr_set_polling_rate(struct device *dev,
 	struct lps25h_prs_data *stat = dev_get_drvdata(dev);
 	unsigned long interval_ms;
 
-	if (strict_strtoul(buf, 10, &interval_ms))
+	if (kstrtoul(buf, 10, &interval_ms))
 		return -EINVAL;
 	if (!interval_ms)
 		return -EINVAL;
@@ -623,7 +623,7 @@ static ssize_t attr_set_enable(struct device *dev,
 	struct lps25h_prs_data *stat = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	if (val)
@@ -658,7 +658,7 @@ static ssize_t attr_set_press_ref(struct device *dev,
 	struct lps25h_prs_data *stat = dev_get_drvdata(dev);
 	long val = 0;
 
-	if (strict_strtol(buf, 10, &val))
+	if (kstrtol(buf, 10, &val))
 		return -EINVAL;
 
 	if (val < PR_ABS_MIN || val > PR_ABS_MAX) {
@@ -701,7 +701,7 @@ static ssize_t attr_set_press_offset(struct device *dev,
 	struct lps25h_prs_data *stat = dev_get_drvdata(dev);
 	long val = 0;
 
-	if (strict_strtol(buf, 10, &val))
+	if (kstrtol(buf, 10, &val))
 		return -EINVAL;
 
 	if (val < PRESS_OFFSET_MIN || val > PRESS_OFFSET_MAX) {
@@ -728,7 +728,7 @@ static ssize_t attr_set_autozero(struct device *dev,
 	struct lps25h_prs_data *stat = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 10, &val))
+	if (kstrtoul(buf, 10, &val))
 		return -EINVAL;
 
 	mutex_lock(&stat->lock);
@@ -749,7 +749,7 @@ static ssize_t attr_reg_set(struct device *dev, struct device_attribute *attr,
 	u8 reg, data;
 	unsigned long val;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	mutex_lock(&stat->lock);
@@ -784,7 +784,7 @@ static ssize_t attr_addr_set(struct device *dev, struct device_attribute *attr,
 	struct lps25h_prs_data *stat = dev_get_drvdata(dev);
 	unsigned long val;
 
-	if (strict_strtoul(buf, 16, &val))
+	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
 
 	mutex_lock(&stat->lock);

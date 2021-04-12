@@ -1130,7 +1130,7 @@ static ssize_t lis2ds_set_enable(struct device *dev, struct device_attribute *at
 	struct lis2ds_sensor_data *sdata = dev_get_drvdata(dev);
 	unsigned long enable;
 
-	if (strict_strtoul(buf, 10, &enable))
+	if (kstrtoul(buf, 10, &enable))
 		return -EINVAL;
 
 	if (enable)
