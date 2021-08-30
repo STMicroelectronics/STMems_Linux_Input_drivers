@@ -1,0 +1,20 @@
+config INPUT_LIS331HH
+	tristate "STMicroelectronics LIS331HH sensor"
+	depends on (I2C || SPI) && SYSFS
+	select INPUT_LIS331HH_I2C if (I2C)
+	select INPUT_LIS331HH_SPI if (SPI)
+	help
+	   This driver support the STMicroelectronics LIS331HH sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called lis331hh.
+
+config INPUT_LIS331HH_I2C
+	tristate
+	depends on INPUT_LIS331HH
+	depends on I2C
+
+config INPUT_LIS331HH_SPI
+	tristate
+	depends on INPUT_LIS331HH
+	depends on SPI

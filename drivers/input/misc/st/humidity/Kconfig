@@ -1,0 +1,9 @@
+
+menuconfig INPUT_HUMIDITY
+	tristate "Humidity"
+
+if INPUT_HUMIDITY
+
+source "drivers/input/misc/st/humidity/hts221/Kconfig"
+
+endif # INPUT_HUMIDITY

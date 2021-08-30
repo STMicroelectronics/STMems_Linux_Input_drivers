@@ -1,0 +1,22 @@
+
+config INPUT_LSM303D
+         tristate "STM LSM303D sensor"
+         depends on (I2C || SPI) && SYSFS
+	 select INPUT_LSM303D_I2C if (I2C)
+	 select INPUT_LSM303D_SPI if (SPI)
+         help
+           This driver support the STMicroelectronics LSM303D sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called lsm303d.
+
+config INPUT_LSM303D_I2C
+         tristate
+         depends on INPUT_LSM303D
+         depends on I2C
+
+config INPUT_LSM303D_SPI
+         tristate
+         depends on INPUT_LSM303D
+         depends on SPI
+

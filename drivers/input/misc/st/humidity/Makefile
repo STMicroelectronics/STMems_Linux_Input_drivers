@@ -1,0 +1,1 @@
+obj-$(CONFIG_INPUT_HTS221) += hts221/

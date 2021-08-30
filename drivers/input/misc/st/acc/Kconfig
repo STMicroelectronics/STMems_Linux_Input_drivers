@@ -1,0 +1,21 @@
+
+menuconfig INPUT_ACC
+	tristate "accelerometer"
+
+if INPUT_ACC
+
+source "drivers/input/misc/st/acc/ais328dq/Kconfig"
+source "drivers/input/misc/st/acc/ais3624dq/Kconfig"
+source "drivers/input/misc/st/acc/lis2dh/Kconfig"
+source "drivers/input/misc/st/acc/lis2de/Kconfig"
+source "drivers/input/misc/st/acc/lis2ds/Kconfig"
+source "drivers/input/misc/st/acc/h3lis100dl/Kconfig"
+source "drivers/input/misc/st/acc/lis3dsh/Kconfig"
+source "drivers/input/misc/st/acc/lis2hh12/Kconfig"
+source "drivers/input/misc/st/acc/lis3de/Kconfig"
+source "drivers/input/misc/st/acc/lis331dlh/Kconfig"
+source "drivers/input/misc/st/acc/lis331hh/Kconfig"
+source "drivers/input/misc/st/acc/h3lis331dl/Kconfig"
+source "drivers/input/misc/st/acc/lis3dh/Kconfig"
+
+endif # INPUT_ACC

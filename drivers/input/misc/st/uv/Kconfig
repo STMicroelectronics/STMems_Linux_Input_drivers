@@ -1,0 +1,8 @@
+menuconfig INPUT_UV
+	tristate "Ultraviolet"
+
+if INPUT_UV
+
+source "drivers/input/misc/st/uv/uvis25/Kconfig"
+
+endif # INPUT_UV

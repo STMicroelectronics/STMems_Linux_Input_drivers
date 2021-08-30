@@ -1,0 +1,20 @@
+config INPUT_AIS3624DQ
+	tristate "STMicroelectronics AIS3624DQ sensor"
+	depends on (I2C || SPI) && SYSFS
+	select INPUT_AIS3624DQ_I2C if (I2C)
+	select INPUT_AIS3624DQ_SPI if (SPI)
+	help
+	   This driver support the STMicroelectronics AIS3624DQ sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called ais3624dq.
+
+config INPUT_AIS3624DQ_I2C
+	tristate
+	depends on INPUT_AIS3624DQ
+	depends on I2C
+
+config INPUT_AIS3624DQ_SPI
+	tristate
+	depends on INPUT_AIS3624DQ
+	depends on SPI

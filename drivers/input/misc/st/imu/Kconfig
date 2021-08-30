@@ -1,0 +1,16 @@
+
+menuconfig INPUT_IMU
+	tristate "Inertial motion unit"
+
+if INPUT_IMU
+
+source "drivers/input/misc/st/imu/lsm6ds3/Kconfig"
+source "drivers/input/misc/st/imu/lsm6dsm/Kconfig"
+source "drivers/input/misc/st/imu/lsm6dsl/Kconfig"
+source "drivers/input/misc/st/imu/lsm9ds0/Kconfig"
+source "drivers/input/misc/st/imu/lsm9ds1/Kconfig"
+source "drivers/input/misc/st/imu/lsm330dlc/Kconfig"
+source "drivers/input/misc/st/imu/lsm6ds0/Kconfig"
+source "drivers/input/misc/st/imu/lsm330/Kconfig"
+
+endif # INPUT_IMU

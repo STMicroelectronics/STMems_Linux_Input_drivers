@@ -1,0 +1,20 @@
+config INPUT_LSM6DS0
+	tristate "STMicroelectronics LSM6DS0 sensor"
+	depends on (I2C || SPI) && SYSFS
+	select INPUT_LSM6DS0_I2C if (I2C)
+	select INPUT_LSM6DS0_SPI if (SPI)
+	help
+	   This driver support the STMicroelectronics LSM6DS0 sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called lsm6ds0.
+
+config INPUT_LSM6DS0_I2C
+	tristate
+	depends on INPUT_LSM6DS0
+	depends on I2C
+
+config INPUT_LSM6DS0_SPI
+	tristate
+	depends on INPUT_LSM6DS0
+	depends on SPI

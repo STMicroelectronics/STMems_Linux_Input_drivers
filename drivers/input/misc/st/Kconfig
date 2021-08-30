@@ -1,0 +1,16 @@
+
+menuconfig INPUT_ST
+	tristate "STM MEMs Device Drivers"
+
+if INPUT_ST
+
+source "drivers/input/misc/st/imu/Kconfig"
+source "drivers/input/misc/st/ecompass/Kconfig"
+source "drivers/input/misc/st/acc/Kconfig"
+source "drivers/input/misc/st/humidity/Kconfig"
+source "drivers/input/misc/st/gyro/Kconfig"
+source "drivers/input/misc/st/magnetometer/Kconfig"
+source "drivers/input/misc/st/pressure/Kconfig"
+source "drivers/input/misc/st/uv/Kconfig"
+
+endif # INPUT_ST
