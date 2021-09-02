@@ -292,3 +292,6 @@ int st_sensor_common_resume(struct st_common_data *cdata)
 EXPORT_SYMBOL(st_sensor_common_resume);
 #endif /* CONFIG_PM */
 
+MODULE_DESCRIPTION("lsm303ah_core driver");
+MODULE_AUTHOR("Giuseppe Barba <giuseppe.barba@st.com>");
+MODULE_LICENSE("GPL v2");
