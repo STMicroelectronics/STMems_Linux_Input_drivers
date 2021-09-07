@@ -359,8 +359,8 @@ static void lps22hh_input_work_func(struct work_struct *work)
 			  ktime_set(0,
 				   (lps22hh_get_time_ns() - prs->timestamp)));
 
-	if (tmpkt.tv64 < 0)
-		tmpkt = prs->delta_ts;
+	if (tmpkt < 0LL)
+		tmpkt = ktime_set(0,prs->delta_ts);
 
 	hrtimer_start(&prs->hr_timer, tmpkt, HRTIMER_MODE_REL);
 

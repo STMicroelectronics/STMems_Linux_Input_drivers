@@ -305,7 +305,7 @@ static void lis3dhh_acc_input_poll_work_func(struct work_struct *work)
 		/* Adjust new timeout. */
 		ktdelta = ktime_set(0, lis3dhh_acc_get_time_ns() - stat->timestamp);
 		/* Avoid negative value in case of High ODR. */
-		if (stat->polling_ktime.tv64 > ktdelta.tv64)
+		if (stat->polling_ktime > ktdelta)
 			tmpkt = ktime_sub(stat->polling_ktime, ktdelta);
 		else
 			tmpkt = stat->polling_ktime;

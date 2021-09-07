@@ -858,7 +858,7 @@ static void lis2dh_acc_input_work_func(struct work_struct *work)
 			  (lis2dh_acc_get_time_ns() - stat->timestamp)));
 
 	/* Avoid negative value. */
-	if (tmpkt.tv64 < 0)
+	if (tmpkt < 0LL)
 		tmpkt = stat->ktime;
 
 	/* Reschedule timer */
