@@ -1,0 +1,36 @@
+From 379dbde06c901901b7e1a0bf3c7ea1058136e427 Mon Sep 17 00:00:00 2001
+From: Matteo Dameno <matteo.dameno@st.com>
+Date: Tue, 16 Nov 2021 17:07:00 +0100
+Subject: [PATCH] stm: k4.19 Add STM sensors input drivers to kernel
+ 4.19 build system
+
+Signed-off-by: Matteo Dameno <matteo.dameno@st.com>
+Change-Id: Id9a2b296eae03431ac95dba323c081f90d3b8f96
+---
+ drivers/input/misc/Kconfig  | 2 ++
+ drivers/input/misc/Makefile | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index ca59a2b..ded6fe9 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -851,4 +851,6 @@ config INPUT_SC27XX_VIBRA
+ 	  To compile this driver as a module, choose M here. The module will
+ 	  be called sc27xx_vibra.
+
++source "drivers/input/misc/st/Kconfig"
++
+ endif
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index 9d0f9d1..7ca4b8f 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -81,3 +81,4 @@ obj-$(CONFIG_INPUT_WM831X_ON)		+= wm831x-on.o
+ obj-$(CONFIG_INPUT_XEN_KBDDEV_FRONTEND)	+= xen-kbdfront.o
+ obj-$(CONFIG_INPUT_YEALINK)		+= yealink.o
+ obj-$(CONFIG_INPUT_IDEAPAD_SLIDEBAR)	+= ideapad_slidebar.o
++obj-$(CONFIG_INPUT_ST)			+= st/
+--
+2.7.4
+
