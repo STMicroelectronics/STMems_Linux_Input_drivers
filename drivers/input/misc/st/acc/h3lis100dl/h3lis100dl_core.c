@@ -905,8 +905,7 @@ int h3lis100dl_common_probe(struct h3lis100dl_data *acc)
 	if (acc->dev->platform_data == NULL) {
 		dev_err(acc->dev, "platform data is NULL. exiting.\n");
 		err = -ENODEV;
-		return err;
-
+		goto exit_check_functionality_failed;
 	}
 #else
 	acc->dev->platform_data = NULL;
@@ -1009,6 +1008,9 @@ exit_kfree_pdata:
 	kfree(acc->pdata);
 err_mutexunlock:
 	mutex_unlock(&acc->lock);
+#ifndef CONFIG_OF
+exit_check_functionality_failed:
+#endif
 	printk(KERN_ERR "%s: Driver Init failed\n", H3LIS100DL_DEV_NAME);
 
 	return err;
