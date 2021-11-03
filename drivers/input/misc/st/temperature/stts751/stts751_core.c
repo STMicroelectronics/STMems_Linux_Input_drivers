@@ -269,10 +269,11 @@ static ssize_t attr_set_oneshot(struct device *device,
 		return -EINVAL;
 
 	mutex_lock(&dev->lock);
-	if (!dev->enabled)
+	if (!dev->enabled) {
 		enabled = false;
 		err = i2c_smbus_write_byte_data(client, REG_ONE_SHOT_ADDR, random_data);
 		stts751_get_and_report_data(dev);
+	}
 	mutex_unlock(&dev->lock);
 
 	if (enabled)
