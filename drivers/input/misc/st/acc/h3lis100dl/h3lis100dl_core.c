@@ -1009,6 +1009,9 @@ exit_kfree_pdata:
 	kfree(acc->pdata);
 err_mutexunlock:
 	mutex_unlock(&acc->lock);
+#ifndef CONFIG_OF
+exit_check_functionality_failed:
+#endif
 	printk(KERN_ERR "%s: Driver Init failed\n", H3LIS100DL_DEV_NAME);
 
 	return err;
