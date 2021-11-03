@@ -1437,10 +1437,11 @@ static int create_sysfs_interfaces(struct device *dev)
 {
 	int i, ret;
 
-	for (i = 0; i < ARRAY_SIZE(attributes); i++)
+	for (i = 0; i < ARRAY_SIZE(attributes); i++) {
 		ret = device_create_file(dev, attributes + i);
 		if (ret < 0)
 			goto error;
+	}
 	return 0;
 
 error:
