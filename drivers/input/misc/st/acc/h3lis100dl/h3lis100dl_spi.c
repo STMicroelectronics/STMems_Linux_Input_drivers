@@ -178,13 +178,13 @@ static const struct dev_pm_ops h3lis100dl_pm_ops = {
 #define H3LIS100DL_PM_OPS		NULL
 #endif /* CONFIG_PM */
 
-#ifdef CONFIG_OF
 static const struct spi_device_id h3lis100dl_ids[] = {
 	{H3LIS100DL_DEV_NAME, 0},
 	{ }
 };
 MODULE_DEVICE_TABLE(spi, h3lis100dl_ids);
 
+#ifdef CONFIG_OF
 static const struct of_device_id h3lis100dl_id_spi_table[] = {
 	{.compatible = "st,h3lis100dl", },
 	{ },
