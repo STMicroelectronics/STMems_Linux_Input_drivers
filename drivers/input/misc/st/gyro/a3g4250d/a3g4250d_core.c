@@ -717,7 +717,7 @@ int a3g4250d_common_probe(struct a3g4250d_data *gyro)
 	if (gyro->pdata == NULL) {
 		dev_err(gyro->dev, "failed to allocate memory for pdata: %d\n",
 			err);
-		goto err1;
+		goto err0;
 	}
 #ifdef CONFIG_OF
 	a3g4250d_parse_dt(gyro, gyro->dev);
@@ -729,14 +729,14 @@ int a3g4250d_common_probe(struct a3g4250d_data *gyro)
 	err = a3g4250d_validate_pdata(gyro);
 	if (err < 0) {
 		dev_err(gyro->dev, "failed to validate platform data\n");
-		goto err1_1;
+		goto err1;
 	}
 
 	if (gyro->pdata->init) {
 		err = gyro->pdata->init();
 		if (err < 0) {
 			dev_err(gyro->dev, "init failed: %d\n", err);
-			goto err1_1;
+			goto err1;
 		}
 	}
 
@@ -791,10 +791,10 @@ err3:
 err2:
 	if (gyro->pdata->exit)
 		gyro->pdata->exit();
-err1_1:
+err1:
 	mutex_unlock(&gyro->lock);
 	kfree(gyro->pdata);
-err1:
+err0:
 	pr_err("%s: Driver Initialization failed\n", A3G4250D_DEV_NAME);
 
 	return err;
