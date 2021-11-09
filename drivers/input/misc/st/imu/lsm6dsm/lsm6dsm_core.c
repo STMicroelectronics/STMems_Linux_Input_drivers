@@ -24,6 +24,8 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
+#else
+#include "linux/input/lsm6dsm.h"
 #endif
 
 #include "lsm6dsm_core.h"
