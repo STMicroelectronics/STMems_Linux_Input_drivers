@@ -186,7 +186,7 @@ static const struct of_device_id lis2dw12_id_table[] = {
 	{ },
 };
 MODULE_DEVICE_TABLE(of, lis2dw12_id_table);
-#endif
+#endif /* CONFIG_OF */
 
 static struct spi_driver lis2dw12_spi_driver = {
 	.driver = {
