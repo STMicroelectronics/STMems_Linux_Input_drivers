@@ -136,7 +136,9 @@ static int lsm9ds1_acc_gyr_spi_probe(struct spi_device *spi)
 	dev->bus_type = BUS_SPI;
 	dev->tf = &lsm9ds1_acc_gyr_spi_tf;
 	dev->dev = &spi->dev;
+#ifdef CONFIG_OF
 	dev->acc_gyr_dt_id = lsm9ds1_acc_gyr_spi_id_table;
+#endif
 
 	spi_set_drvdata(spi, dev);
 

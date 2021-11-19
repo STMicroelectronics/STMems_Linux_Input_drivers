@@ -3030,7 +3030,7 @@ static int32_t lsm303d_parse_dt(struct lsm303d_status *stat)
 
 int lsm303d_probe(struct lsm303d_dev *dev)
 {
-	int err;
+	int err = 0;
 	struct lsm303d_status *stat = &dev->st;
 
 	if(lsm303d_workqueue == 0)
@@ -3056,7 +3056,7 @@ int lsm303d_probe(struct lsm303d_dev *dev)
 #ifdef CONFIG_OF
 	lsm303d_parse_dt(stat);
 #else
-	if (client->dev.platform_data == NULL) {
+	if (dev->dev->platform_data == NULL) {
 		memcpy(stat->pdata_acc, &default_lsm303d_acc_pdata,
 						sizeof(*stat->pdata_acc));
 		memcpy(stat->pdata_mag, &default_lsm303d_mag_pdata,
@@ -3069,7 +3069,7 @@ int lsm303d_probe(struct lsm303d_dev *dev)
 								GFP_KERNEL);
 		if(tmp == NULL)
 			goto exit_kfree_pdata;
-		memcpy(tmp, client->dev.platform_data, sizeof(*tmp));
+		memcpy(tmp, dev->dev->platform_data, sizeof(*tmp));
 		if(tmp->pdata_acc == NULL) {
 			memcpy(stat->pdata_acc, &default_lsm303d_acc_pdata,
 						sizeof(*stat->pdata_acc));
