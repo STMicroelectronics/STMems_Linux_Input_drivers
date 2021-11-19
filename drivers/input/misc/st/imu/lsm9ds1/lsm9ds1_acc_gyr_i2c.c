@@ -119,7 +119,9 @@ static int lsm9ds1_acc_gyr_i2c_probe(struct i2c_client *client,
 	dev->name = client->name;
 	dev->bus_type = BUS_I2C;
 	dev->tf = &lsm9ds1_acc_gyr_i2c_tf;
+#ifdef CONFIG_OF
 	dev->acc_gyr_dt_id = lsm9ds1_acc_gyr_i2c_id_table;
+#endif /* CONFIG_OF */
 
 	i2c_set_clientdata(client, dev);
 
