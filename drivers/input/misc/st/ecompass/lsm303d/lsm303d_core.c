@@ -3030,7 +3030,7 @@ static int32_t lsm303d_parse_dt(struct lsm303d_status *stat)
 
 int lsm303d_probe(struct lsm303d_dev *dev)
 {
-	int err;
+	int err = 0;
 	struct lsm303d_status *stat = &dev->st;
 
 	if(lsm303d_workqueue == 0)
