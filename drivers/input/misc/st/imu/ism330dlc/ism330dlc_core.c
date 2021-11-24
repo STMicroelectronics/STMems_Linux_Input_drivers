@@ -24,10 +24,9 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
-#else
-#include "linux/input/ism330dlc.h"
 #endif
 
+#include "linux/platform_data/st/ism330dlc.h"
 #include "ism330dlc_core.h"
 
 /* COMMON DEFINE FOR ACCEL-GYRO SENSORS */

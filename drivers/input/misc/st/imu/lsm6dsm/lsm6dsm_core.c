@@ -24,10 +24,9 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
-#else
-#include "linux/input/lsm6dsm.h"
 #endif
 
+#include "linux/platform_data/st/lsm6dsm.h"
 #include "lsm6dsm_core.h"
 
 /* COMMON DEFINE FOR ACCEL-GYRO SENSORS */

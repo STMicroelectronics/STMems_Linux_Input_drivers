@@ -41,10 +41,9 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
-#else
-#include "linux/input/lis2dw12.h"
 #endif
 
+#include "linux/platform_data/st/lis2dw12.h"
 #include "lis2dw12_core.h"
 
 #define LIS2DW12_WHO_AM_I_ADDR		0x0f
