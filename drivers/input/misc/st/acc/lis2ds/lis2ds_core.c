@@ -43,7 +43,7 @@
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
 #else
-#include "linux/input/lis2ds.h"
+#include "linux/platform_data/st/lis2ds.h"
 #endif
 
 #include "lis2ds_core.h"

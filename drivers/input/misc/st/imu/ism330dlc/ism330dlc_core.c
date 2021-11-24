@@ -25,7 +25,7 @@
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
 #else
-#include "linux/input/ism330dlc.h"
+#include "linux/platform_data/st/ism330dlc.h"
 #endif
 
 #include "ism330dlc_core.h"
