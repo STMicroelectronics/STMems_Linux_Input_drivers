@@ -24,7 +24,7 @@
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
 #else
-#include "linux/input/asm330lhh.h"
+#include "linux/platform_data/st/asm330lhh.h"
 #endif
 
 #include "asm330lhh_core.h"
