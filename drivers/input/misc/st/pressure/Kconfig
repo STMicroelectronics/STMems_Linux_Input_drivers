@@ -7,5 +7,6 @@ source "drivers/input/misc/st/pressure/lps22hb/Kconfig"
 source "drivers/input/misc/st/pressure/lps25h/Kconfig"
 source "drivers/input/misc/st/pressure/lps33hw/Kconfig"
 source "drivers/input/misc/st/pressure/lps22hh/Kconfig"
+source "drivers/input/misc/st/pressure/lps22df/Kconfig"
 
 endif # INPUT_PRESSURE
