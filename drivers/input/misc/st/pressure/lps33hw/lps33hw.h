@@ -99,10 +99,10 @@ struct lps33_prs_data {
 int lps33hw_common_probe(struct lps33_prs_data *prs);
 int lps33hw_common_remove(struct lps33_prs_data *prs);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lps33hw_common_resume(struct lps33_prs_data *prs);
 int lps33hw_common_suspend(struct lps33_prs_data *prs);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 #endif /* __KERNEL__ */
 
 #endif  /* __LPS33_H__ */

@@ -109,7 +109,7 @@ static int lps22hb_i2c_remove(struct i2c_client *client)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lps22hb_suspend(struct device *dev)
 {
 	struct lps22_prs_data *cdata = i2c_get_clientdata(to_i2c_client(dev));
@@ -124,14 +124,12 @@ static int lps22hb_resume(struct device *dev)
 	return lps22hb_common_resume(cdata);
 }
 
-static const struct dev_pm_ops lps22hb_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lps22hb_suspend, lps22hb_resume)
-};
+static SIMPLE_DEV_PM_OPS(lps22hb_pm_ops, lps22hb_suspend, lps22hb_resume);
 
 #define LPS22HB_PM_OPS		(&lps22hb_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define LPS22HB_PM_OPS		NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct i2c_device_id lps22hb_ids[] = {
 	{ LPS22_PRS_DEV_NAME },

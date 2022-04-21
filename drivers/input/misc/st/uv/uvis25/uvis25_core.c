@@ -521,7 +521,7 @@ int uvis25_common_remove(struct uvis25_data *stat)
 }
 EXPORT_SYMBOL(uvis25_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int uvis25_common_resume(struct uvis25_data *stat)
 {
 	if (stat->on_before_suspend)
@@ -542,7 +542,7 @@ int uvis25_common_suspend(struct uvis25_data *stat)
 	return uvis25_disable(stat);
 }
 EXPORT_SYMBOL(uvis25_common_suspend);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("STMicrolelectronics uvis25 sensor driver");
 MODULE_AUTHOR("Mario Tesi, STMicroelectronics");

@@ -104,9 +104,9 @@ struct lps22hh_data {
 int lps22hh_common_probe(struct lps22hh_data *prs);
 int lps22hh_common_remove(struct lps22hh_data *prs);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lps22hh_common_resume(struct lps22hh_data *prs);
 int lps22hh_common_suspend(struct lps22hh_data *prs);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif  /* __LPS22HH_H__ */

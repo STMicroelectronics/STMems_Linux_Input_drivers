@@ -147,7 +147,7 @@ static int uvis25_i2c_remove(struct i2c_client *client)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int uvis25_suspend(struct device *dev)
 {
 	struct uvis25_data *stat = i2c_get_clientdata(to_i2c_client(dev));
@@ -162,14 +162,12 @@ static int uvis25_resume(struct device *dev)
 	return uvis25_common_resume(stat);
 }
 
-static const struct dev_pm_ops uvis25_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(uvis25_suspend, uvis25_resume)
-};
+static SIMPLE_DEV_PM_OPS(uvis25_pm_ops, uvis25_suspend, uvis25_resume);
 
 #define UVIS25_PM_OPS	(&uvis25_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define UVIS25_PM_OPS	NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct i2c_device_id uvis25_ids[] = {
 	{ UVIS25_DEV_NAME, 0 },
@@ -189,9 +187,7 @@ static struct i2c_driver uvis25_i2c_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = UVIS25_DEV_NAME,
-#ifdef CONFIG_PM
 		.pm = UVIS25_PM_OPS,
-#endif
 #ifdef CONFIG_OF
 		.of_match_table = uvis25_id_table,
 #endif

@@ -97,10 +97,10 @@ struct uvis25_data {
 int uvis25_common_probe(struct uvis25_data *stat);
 int uvis25_common_remove(struct uvis25_data *stat);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int uvis25_common_resume(struct uvis25_data *stat);
 int uvis25_common_suspend(struct uvis25_data *stat);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 #endif /* __KERNEL__ */
 
 #endif  /* __UVIS25_H__ */
