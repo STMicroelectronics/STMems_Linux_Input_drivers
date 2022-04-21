@@ -1769,7 +1769,7 @@ int lps22hb_common_remove(struct lps22_prs_data *prs)
 }
 EXPORT_SYMBOL(lps22hb_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lps22hb_common_resume(struct lps22_prs_data *prs)
 {
 	if (prs->on_before_suspend)
@@ -1786,7 +1786,7 @@ int lps22hb_common_suspend(struct lps22_prs_data *prs)
 	return lps22_prs_disable(prs);
 }
 EXPORT_SYMBOL(lps22hb_common_suspend);
-#endif
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("STMicrolelectronics lps22 pressure sensor driver");
 MODULE_AUTHOR("HESA BU, STMicroelectronics");

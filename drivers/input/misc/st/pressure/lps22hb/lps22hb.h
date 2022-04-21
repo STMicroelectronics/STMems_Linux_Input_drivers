@@ -127,10 +127,10 @@ struct lps22_prs_data {
 int lps22hb_common_probe(struct lps22_prs_data *prs);
 int lps22hb_common_remove(struct lps22_prs_data *prs);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lps22hb_common_resume(struct lps22_prs_data *prs);
 int lps22hb_common_suspend(struct lps22_prs_data *prs);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 #endif /* __KERNEL__ */
 
 #endif  /* __LPS22_H__ */

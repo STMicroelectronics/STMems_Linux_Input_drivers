@@ -1732,7 +1732,7 @@ int lps33hw_common_remove(struct lps33_prs_data *prs)
 }
 EXPORT_SYMBOL(lps33hw_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lps33hw_common_resume(struct lps33_prs_data *prs)
 {
 	if (prs->on_before_suspend)
@@ -1749,7 +1749,7 @@ int lps33hw_common_suspend(struct lps33_prs_data *prs)
 	return lps33_prs_disable(prs);
 }
 EXPORT_SYMBOL(lps33hw_common_suspend);
-#endif
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("STMicrolelectronics lps33hw pressure sensor driver");
 MODULE_AUTHOR("AMG STMicroelectronics");

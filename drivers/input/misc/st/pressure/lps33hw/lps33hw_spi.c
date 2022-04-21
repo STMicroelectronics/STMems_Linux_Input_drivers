@@ -131,7 +131,7 @@ static int lps33hw_spi_remove(struct spi_device *spi)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lps33hw_suspend(struct device *dev)
 {
 	struct lps33_prs_data *cdata = spi_get_drvdata(to_spi_device(dev));
@@ -146,14 +146,12 @@ static int lps33hw_resume(struct device *dev)
 	return lps33hw_common_resume(cdata);
 }
 
-static const struct dev_pm_ops lps33hw_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lps33hw_suspend, lps33hw_resume)
-};
+static SIMPLE_DEV_PM_OPS(lps33hw_pm_ops, lps33hw_suspend, lps33hw_resume);
 
 #define LPS33HW_PM_OPS		(&lps33hw_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define LPS33HW_PM_OPS		NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct spi_device_id lps33hw_ids[] = {
 	{ LPS33_PRS_DEV_NAME },

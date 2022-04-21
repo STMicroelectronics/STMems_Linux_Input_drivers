@@ -88,8 +88,8 @@ static const struct hts221_transfer_function hts221_spi_tf = {
 	.read = hts221_spi_read,
 };
 
-#ifdef CONFIG_PM
-static int hts221_spi_resume(struct device *device)
+#ifdef CONFIG_PM_SLEEP
+static int hts221_resume(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct hts221_dev *dev = spi_get_drvdata(spi);
@@ -97,7 +97,7 @@ static int hts221_spi_resume(struct device *device)
 	return hts221_enable(dev);
 }
 
-static int hts221_spi_suspend(struct device *device)
+static int hts221_suspend(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct hts221_dev *dev = spi_get_drvdata(spi);
@@ -105,11 +105,14 @@ static int hts221_spi_suspend(struct device *device)
 	return hts221_disable(dev);
 }
 
-static const struct dev_pm_ops hts221_spi_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(hts221_spi_suspend,
-				hts221_spi_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(hts221_pm_ops,
+				hts221_suspend,
+				hts221_resume);
+
+#define HTS221_PM_OPS	(&hts221_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define HTS221_PM_OPS	NULL
+#endif /* CONFIG_PM_SLEEP */
 
 static int hts221_spi_probe(struct spi_device *spi)
 {
@@ -176,9 +179,7 @@ static struct spi_driver hts221_spi_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = "hts221_spi",
-#ifdef CONFIG_PM
-		.pm = &hts221_spi_pm_ops,
-#endif /* CONFIG_PM */
+		.pm = HTS221_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = hts221_spi_id_table,
 #endif /* CONFIG_OF */

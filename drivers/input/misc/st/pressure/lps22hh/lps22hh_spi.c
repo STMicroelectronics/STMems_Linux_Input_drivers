@@ -134,7 +134,7 @@ static int lps22hh_spi_remove(struct spi_device *spi)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lps22hh_suspend(struct device *dev)
 {
 	struct lps22hh_data *cdata = spi_get_drvdata(to_spi_device(dev));
@@ -149,14 +149,12 @@ static int lps22hh_resume(struct device *dev)
 	return lps22hh_common_resume(cdata);
 }
 
-static const struct dev_pm_ops lps22hh_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lps22hh_suspend, lps22hh_resume)
-};
+static SIMPLE_DEV_PM_OPS(lps22hh_pm_ops, lps22hh_suspend, lps22hh_resume);
 
 #define LPS22HH_PM_OPS		(&lps22hh_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define LPS22HH_PM_OPS		NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct spi_device_id lps22hh_ids[] = {
 	{ LPS22HH_DEV_NAME },

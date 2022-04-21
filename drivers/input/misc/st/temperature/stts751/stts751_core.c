@@ -416,7 +416,7 @@ static void stts751_input_work_fn(struct work_struct *work)
 	}
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int stts751_resume(struct device *device)
 {
 	struct i2c_client *client = to_i2c_client(device);
@@ -433,10 +433,14 @@ static int stts751_suspend(struct device *device)
 	return stts751_disable(dev);
 }
 
-static const struct dev_pm_ops stts751_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(stts751_suspend, stts751_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(stts751_pm_ops,
+				stts751_suspend,
+				stts751_resume);
+
+#define STTS751_PM_OPS	(&stts751_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define STTS751_PM_OPS	NULL
+#endif /* CONFIG_PM_SLEEP */
 
 static int stts751_probe(struct i2c_client *client,
 			 const struct i2c_device_id *id)
@@ -552,10 +556,7 @@ static struct i2c_driver stts751_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = "stts751",
-#ifdef CONFIG_PM
-		.pm = &stts751_pm_ops,
-#endif /* CONFIG_PM */
-
+		.pm = STTS751_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = stts751_id_table,
 #endif /* CONFIG_OF */

@@ -1058,7 +1058,7 @@ int lps25h_common_remove(struct lps25h_prs_data *stat)
 }
 EXPORT_SYMBOL(lps25h_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lps25h_common_resume(struct lps25h_prs_data *stat)
 {
 	if (stat->on_before_suspend)
@@ -1075,7 +1075,7 @@ int lps25h_common_suspend(struct lps25h_prs_data *stat)
 	return lps25h_prs_disable(stat);
 }
 EXPORT_SYMBOL(lps25h_common_suspend);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("STMicrolelectronics lps25h pressure sensor driver");
 MODULE_AUTHOR("Matteo Dameno, STMicroelectronics");
