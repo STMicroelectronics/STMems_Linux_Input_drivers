@@ -115,7 +115,7 @@ static int lsm6dsl_i2c_remove(struct i2c_client *client)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lsm6dsl_suspend(struct device *dev)
 {
 	struct lsm6dsl_data *cdata = i2c_get_clientdata(to_i2c_client(dev));
@@ -130,14 +130,12 @@ static int lsm6dsl_resume(struct device *dev)
 	return lsm6dsl_common_resume(cdata);
 }
 
-static const struct dev_pm_ops lsm6dsl_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lsm6dsl_suspend, lsm6dsl_resume)
-};
+static SIMPLE_DEV_PM_OPS(lsm6dsl_pm_ops, lsm6dsl_suspend, lsm6dsl_resume);
 
 #define LSM6DSL_PM_OPS		(&lsm6dsl_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define LSM6DSL_PM_OPS		NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct i2c_device_id lsm6dsl_ids[] = {
 	{ LSM6DSL_DEV_NAME, 0 },

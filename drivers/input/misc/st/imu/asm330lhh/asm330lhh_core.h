@@ -101,9 +101,9 @@ struct asm330lhh_data {
 int asm330lhh_common_probe(struct asm330lhh_data *cdata, int irq, u16 bustype);
 void asm330lhh_common_remove(struct asm330lhh_data *cdata, int irq);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int asm330lhh_common_suspend(struct asm330lhh_data *cdata);
 int asm330lhh_common_resume(struct asm330lhh_data *cdata);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif /* DRIVERS_INPUT_MISC_ASM330LHH_CORE_H_ */

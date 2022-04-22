@@ -135,9 +135,9 @@ struct ism330dlc_data {
 int ism330dlc_common_probe(struct ism330dlc_data *cdata, int irq, u16 bustype);
 void ism330dlc_common_remove(struct ism330dlc_data *cdata, int irq);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int ism330dlc_common_suspend(struct ism330dlc_data *cdata);
 int ism330dlc_common_resume(struct ism330dlc_data *cdata);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif /* DRIVERS_INPUT_MISC_ISM330DLC_CORE_H_ */

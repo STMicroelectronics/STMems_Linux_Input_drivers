@@ -156,9 +156,9 @@ struct lsm6ds3_data {
 int lsm6ds3_common_probe(struct lsm6ds3_data *cdata, int irq, u16 bustype);
 void lsm6ds3_common_remove(struct lsm6ds3_data *cdata, int irq);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lsm6ds3_common_suspend(struct lsm6ds3_data *cdata);
 int lsm6ds3_common_resume(struct lsm6ds3_data *cdata);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif /* DRIVERS_INPUT_MISC_LSM6DS3_CORE_H_ */

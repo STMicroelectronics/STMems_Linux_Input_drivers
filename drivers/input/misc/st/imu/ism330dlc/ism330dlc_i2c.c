@@ -115,7 +115,7 @@ static int ism330dlc_i2c_remove(struct i2c_client *client)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int ism330dlc_suspend(struct device *dev)
 {
 	struct ism330dlc_data *cdata = i2c_get_clientdata(to_i2c_client(dev));
@@ -130,14 +130,12 @@ static int ism330dlc_resume(struct device *dev)
 	return ism330dlc_common_resume(cdata);
 }
 
-static const struct dev_pm_ops ism330dlc_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(ism330dlc_suspend, ism330dlc_resume)
-};
+static SIMPLE_DEV_PM_OPS(ism330dlc_pm_ops, ism330dlc_suspend, ism330dlc_resume);
 
 #define ISM330DLC_PM_OPS		(&ism330dlc_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define ISM330DLC_PM_OPS		NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct i2c_device_id ism330dlc_ids[] = {
 	{ ISM330DLC_DEV_NAME, 0 },
