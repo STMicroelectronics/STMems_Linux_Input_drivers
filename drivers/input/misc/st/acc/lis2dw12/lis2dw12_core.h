@@ -120,9 +120,9 @@ struct lis2dw12_data {
 int lis2dw12_common_probe(struct lis2dw12_data *cdata, int irq, u16 bustype);
 void lis2dw12_common_remove(struct lis2dw12_data *cdata, int irq);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis2dw12_common_suspend(struct lis2dw12_data *cdata);
 int lis2dw12_common_resume(struct lis2dw12_data *cdata);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif /* DRIVERS_INPUT_MISC_LIS2DW12_CORE_H_ */

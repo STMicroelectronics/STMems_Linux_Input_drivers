@@ -131,7 +131,7 @@ static int lis2dh_acc_i2c_remove(struct i2c_client *client)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lis2dh_acc_suspend(struct device *dev)
 {
 	struct lis2dh_acc_status *stat = i2c_get_clientdata(to_i2c_client(dev));
@@ -146,14 +146,14 @@ static int lis2dh_acc_resume(struct device *dev)
 	return lis2dh_acc_common_resume(stat);
 }
 
-static const struct dev_pm_ops lis2dh_acc_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lis2dh_acc_suspend, lis2dh_acc_resume)
-};
+static SIMPLE_DEV_PM_OPS(lis2dh_acc_pm_ops,
+				lis2dh_acc_suspend,
+				lis2dh_acc_resume);
 
 #define LIS2DH_PM_OPS		(&lis2dh_acc_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define LIS2DH_PM_OPS		NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct i2c_device_id lis2dh_acc_ids[] = {
 	{ LIS2DH_ACC_DEV_NAME, 0 },
@@ -176,9 +176,7 @@ static struct i2c_driver lis2dh_acc_i2c_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = LIS2DH_ACC_DEV_NAME,
-#ifdef CONFIG_PM
 		.pm = LIS2DH_PM_OPS,
-#endif
 #ifdef CONFIG_OF
 		.of_match_table = lis2dh_acc_id_table,
 #endif

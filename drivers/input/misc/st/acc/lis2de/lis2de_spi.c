@@ -149,7 +149,7 @@ static int lis2de_acc_spi_remove(struct spi_device *spi)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lis2de_acc_suspend(struct device *dev)
 {
 	struct lis2de_acc_status *stat= spi_get_drvdata(to_spi_device(dev));
@@ -164,14 +164,14 @@ static int lis2de_acc_resume(struct device *dev)
 	return lis2de_acc_common_resume(stat);
 }
 
-static const struct dev_pm_ops lis2de_acc_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lis2de_acc_suspend, lis2de_acc_resume)
-};
+static SIMPLE_DEV_PM_OPS(lis2de_acc_pm_ops,
+				lis2de_acc_suspend,
+				lis2de_acc_resume);
 
 #define LIS2DE_PM_OPS		(&lis2de_acc_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define LIS2DE_PM_OPS		NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct spi_device_id lis2de_acc_ids[] = {
 	{ LIS2DE_ACC_DEV_NAME, 0 },
@@ -192,9 +192,7 @@ static struct spi_driver lis2de_acc_spi_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = LIS2DE_ACC_DEV_NAME,
-#ifdef CONFIG_PM
 		.pm = LIS2DE_PM_OPS,
-#endif
 #ifdef CONFIG_OF
 		.of_match_table = lis2de_acc_id_table,
 #endif

@@ -156,10 +156,10 @@ struct lis331hh_data {
 int lis331hh_common_probe(struct lis331hh_data *stat);
 int lis331hh_common_remove(struct lis331hh_data *stat);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis331hh_common_resume(struct lis331hh_data *stat);
 int lis331hh_common_suspend(struct lis331hh_data *stat);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif /* __KERNEL__ */
 

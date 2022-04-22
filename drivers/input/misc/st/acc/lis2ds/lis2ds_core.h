@@ -133,9 +133,9 @@ struct lis2ds_data {
 int lis2ds_common_probe(struct lis2ds_data *cdata, int irq, u16 bustype);
 void lis2ds_common_remove(struct lis2ds_data *cdata, int irq);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis2ds_common_suspend(struct lis2ds_data *cdata);
 int lis2ds_common_resume(struct lis2ds_data *cdata);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif /* DRIVERS_INPUT_MISC_LIS2DS_CORE_H_ */

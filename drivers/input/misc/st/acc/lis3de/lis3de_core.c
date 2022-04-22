@@ -1305,7 +1305,7 @@ int lis3de_common_remove(struct lis3de_status *stat)
 }
 EXPORT_SYMBOL(lis3de_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis3de_common_resume(struct lis3de_status *stat)
 {
 	if (stat->on_before_suspend)
@@ -1323,7 +1323,7 @@ int lis3de_common_suspend(struct lis3de_status *stat)
 }
 EXPORT_SYMBOL(lis3de_common_suspend);
 
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("lis3de accelerometer driver");
 MODULE_AUTHOR("Matteo Dameno, Denis Ciocca, Mario Tesi, STMicroelectronics");

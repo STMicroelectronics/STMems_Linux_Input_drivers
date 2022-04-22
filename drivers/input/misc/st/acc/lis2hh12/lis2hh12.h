@@ -162,10 +162,10 @@ struct lis2hh12_status {
 int lis2hh12_common_probe(struct lis2hh12_status *stat);
 int lis2hh12_common_remove(struct lis2hh12_status *stat);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis2hh12_common_resume(struct lis2hh12_status *stat);
 int lis2hh12_common_suspend(struct lis2hh12_status *stat);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif	/* __KERNEL__ */
 

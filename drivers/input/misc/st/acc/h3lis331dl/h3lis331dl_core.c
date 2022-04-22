@@ -1144,7 +1144,7 @@ int h3lis331dl_common_remove(struct h3lis331dl_data *acc)
 }
 EXPORT_SYMBOL(h3lis331dl_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int h3lis331dl_common_resume(struct h3lis331dl_data *acc)
 {
 	if (acc->on_before_suspend)
@@ -1161,7 +1161,7 @@ int h3lis331dl_common_suspend(struct h3lis331dl_data *acc)
 	return h3lis331dl_disable(acc);
 }
 EXPORT_SYMBOL(h3lis331dl_common_suspend);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("h3lis331dl accelerometer driver");
 MODULE_AUTHOR("Matteo Dameno, Carmine Iascone, Mario Tesi, STMicroelectronics");

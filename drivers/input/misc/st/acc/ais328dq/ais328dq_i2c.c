@@ -134,7 +134,7 @@ static int ais328dq_i2c_remove(struct i2c_client *client)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int ais328dq_suspend(struct device *dev)
 {
 	struct ais328dq_acc_data *acc = i2c_get_clientdata(to_i2c_client(dev));
@@ -149,10 +149,14 @@ static int ais328dq_resume(struct device *dev)
 	return ais328dq_acc_enable(acc);
 }
 
-static const struct dev_pm_ops ais328dq_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(ais328dq_suspend, ais328dq_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(ais328dq_pm_ops,
+			ais328dq_suspend,
+			ais328dq_resume);
+
+#define AIS328DQ_PM_OPS		(&ais328dq_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define AIS328DQ_PM_OPS		NULL
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct i2c_device_id ais328dq_ids[] = {
 	{ AIS328DQ_ACC_DEV_NAME, 0 },
@@ -172,9 +176,7 @@ static struct i2c_driver ais328dq_i2c_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = AIS328DQ_ACC_DEV_NAME,
-#ifdef CONFIG_PM
-		.pm = &ais328dq_pm_ops,
-#endif
+		.pm = AIS328DQ_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = ais328dq_id_table,
 #endif

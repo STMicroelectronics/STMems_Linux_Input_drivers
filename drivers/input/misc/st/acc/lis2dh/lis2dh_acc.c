@@ -1116,7 +1116,7 @@ int lis2dh_acc_remove(struct lis2dh_acc_status *stat)
 }
 EXPORT_SYMBOL(lis2dh_acc_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis2dh_acc_common_resume(struct lis2dh_acc_status *stat)
 {
 	int err = 0;
@@ -1150,7 +1150,7 @@ int lis2dh_acc_common_suspend(struct lis2dh_acc_status *stat)
 	return 0;
 }
 EXPORT_SYMBOL(lis2dh_acc_common_suspend);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("lis2dh accelerometer driver");
 MODULE_AUTHOR("Matteo Dameno");

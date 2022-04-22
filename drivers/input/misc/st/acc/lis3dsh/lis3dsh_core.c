@@ -1581,7 +1581,7 @@ int lis3dsh_common_remove(struct lis3dsh_status *acc)
 }
 EXPORT_SYMBOL(lis3dsh_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis3dsh_common_resume(struct lis3dsh_status *acc)
 {
 	if (acc->on_before_suspend)
@@ -1598,7 +1598,7 @@ int lis3dsh_common_suspend(struct lis3dsh_status *acc)
 	return lis3dsh_disable(acc);
 }
 EXPORT_SYMBOL(lis3dsh_common_suspend);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("lis3dsh accelerometer driver");
 MODULE_AUTHOR("Matteo Dameno, Denis Ciocca, Mario Tesi, STMicroelectronics");

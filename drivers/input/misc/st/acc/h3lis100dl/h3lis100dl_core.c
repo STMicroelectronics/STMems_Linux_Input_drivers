@@ -1038,7 +1038,7 @@ int h3lis100dl_common_remove(struct h3lis100dl_data *acc)
 }
 EXPORT_SYMBOL(h3lis100dl_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int h3lis100dl_common_resume(struct h3lis100dl_data *acc)
 {
 	if (acc->on_before_suspend)
@@ -1053,7 +1053,7 @@ int h3lis100dl_common_suspend(struct h3lis100dl_data *acc)
 	return h3lis100dl_disable(acc);
 }
 EXPORT_SYMBOL(h3lis100dl_common_suspend);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("h3lis100dl accelerometer driver");
 MODULE_AUTHOR("Armando Visconti, STMicroelectronics");

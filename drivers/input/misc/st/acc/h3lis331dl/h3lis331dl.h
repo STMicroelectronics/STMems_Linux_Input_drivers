@@ -157,10 +157,10 @@ struct h3lis331dl_data {
 int h3lis331dl_common_probe(struct h3lis331dl_data *stat);
 int h3lis331dl_common_remove(struct h3lis331dl_data *stat);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int h3lis331dl_common_resume(struct h3lis331dl_data *stat);
 int h3lis331dl_common_suspend(struct h3lis331dl_data *stat);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif /* __KERNEL__ */
 

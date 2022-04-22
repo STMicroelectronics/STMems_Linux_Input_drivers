@@ -150,7 +150,7 @@ static int lis2dw12_spi_remove(struct spi_device *spi)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lis2dw12_suspend(struct device *dev)
 {
 	struct lis2dw12_data *cdata = spi_get_drvdata(to_spi_device(dev));
@@ -165,14 +165,12 @@ static int lis2dw12_resume(struct device *dev)
 	return lis2dw12_common_resume(cdata);
 }
 
-static const struct dev_pm_ops lis2dw12_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lis2dw12_suspend, lis2dw12_resume)
-};
+static SIMPLE_DEV_PM_OPS(lis2dw12_pm_ops, lis2dw12_suspend, lis2dw12_resume);
 
 #define LIS2DW12_PM_OPS		(&lis2dw12_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define LIS2DW12_PM_OPS		NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct spi_device_id lis2dw12_ids[] = {
 	{ LIS2DW12_DEV_NAME, 0 },
