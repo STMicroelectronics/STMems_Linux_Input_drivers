@@ -91,8 +91,8 @@ static struct lsm330_transfer_function lsm330_gyr_spi_tf = {
 	.read = lsm330_gyr_spi_read,
 };
 
-#ifdef CONFIG_PM
-static int lsm330_gyr_spi_resume(struct device *device)
+#ifdef CONFIG_PM_SLEEP
+static int lsm330_gyr_resume(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct lsm330_gyr_status *stat = spi_get_drvdata(spi);
@@ -100,7 +100,7 @@ static int lsm330_gyr_spi_resume(struct device *device)
 	return lsm330_gyr_enable(stat);
 }
 
-static int lsm330_gyr_spi_suspend(struct device *device)
+static int lsm330_gyr_suspend(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct lsm330_gyr_status *stat = spi_get_drvdata(spi);
@@ -108,11 +108,14 @@ static int lsm330_gyr_spi_suspend(struct device *device)
 	return lsm330_gyr_disable(stat);
 }
 
-static const struct dev_pm_ops lsm330_gyr_spi_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lsm330_gyr_spi_suspend,
-				lsm330_gyr_spi_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(lsm330_gyr_pm_ops,
+				lsm330_gyr_suspend,
+				lsm330_gyr_resume);
+
+#define LSM330_GYR_PM_OPS		(&lsm330_gyr_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define LSM330_GYR_PM_OPS		NULL
+#endif /* CONFIG_PM_SLEEP */
 
 static int lsm330_gyr_spi_probe(struct spi_device *spi)
 {
@@ -179,9 +182,7 @@ static struct spi_driver lsm330_gyr_spi_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = "lsm330_gyr_spi",
-#ifdef CONFIG_PM
-		.pm = &lsm330_gyr_spi_pm_ops,
-#endif /* CONFIG_PM */
+		.pm = LSM330_GYR_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = lsm330_gyr_spi_id_table,
 #endif /* CONFIG_OF */

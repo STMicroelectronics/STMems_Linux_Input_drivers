@@ -2467,7 +2467,7 @@ int32_t lsm6ds0_common_remove(struct lsm6ds0_status *stat)
 }
 EXPORT_SYMBOL(lsm6ds0_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int32_t lsm6ds0_common_suspend(struct lsm6ds0_status *stat)
 {
 	if (atomic_read(&stat->enabled_gyr) > 0) {
@@ -2503,7 +2503,7 @@ int32_t lsm6ds0_common_resume(struct lsm6ds0_status *stat)
 	return 0;
 }
 EXPORT_SYMBOL(lsm6ds0_common_resume);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION(LSM6DS0_MOD_DESCRIPTION);
 MODULE_AUTHOR("Giuseppe Barba,STMicroelectronics");

@@ -257,9 +257,9 @@ struct lsm6ds0_status {
 int32_t lsm6ds0_common_probe(struct lsm6ds0_status *stat);
 int32_t lsm6ds0_common_remove(struct lsm6ds0_status *stat);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int32_t lsm6ds0_common_suspend(struct lsm6ds0_status *stat);
 int32_t lsm6ds0_common_resume(struct lsm6ds0_status *stat);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif	/* __LSM6DS0_H__ */

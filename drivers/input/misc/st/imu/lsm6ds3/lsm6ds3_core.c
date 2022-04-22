@@ -1553,7 +1553,7 @@ void lsm6ds3_common_remove(struct lsm6ds3_data *cdata, int irq)
 }
 EXPORT_SYMBOL(lsm6ds3_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lsm6ds3_resume_sensors(struct lsm6ds3_sensor_data *sdata)
 {
 	if (!sdata->enabled)
@@ -1587,7 +1587,7 @@ int lsm6ds3_common_resume(struct lsm6ds3_data *cdata)
 }
 EXPORT_SYMBOL(lsm6ds3_common_resume);
 
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("STMicroelectronics lsm6ds3 driver");
 MODULE_AUTHOR("Giuseppe Barba");

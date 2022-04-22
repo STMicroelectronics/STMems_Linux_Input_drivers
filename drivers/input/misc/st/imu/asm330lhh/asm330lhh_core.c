@@ -1305,7 +1305,7 @@ void asm330lhh_common_remove(struct asm330lhh_data *cdata, int irq)
 }
 EXPORT_SYMBOL(asm330lhh_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int asm330lhh_resume_sensors(struct asm330lhh_sensor_data *sdata)
 {
 	if (!sdata->enabled)
@@ -1344,7 +1344,7 @@ int asm330lhh_common_resume(struct asm330lhh_data *cdata)
 }
 EXPORT_SYMBOL(asm330lhh_common_resume);
 
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("STMicroelectronics asm330lhh driver");
 MODULE_AUTHOR("Mario Tesi");

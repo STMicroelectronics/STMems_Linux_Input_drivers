@@ -143,7 +143,7 @@ static int asm330lhh_spi_remove(struct spi_device *spi)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int asm330lhh_suspend(struct device *dev)
 {
 	struct asm330lhh_data *cdata = spi_get_drvdata(to_spi_device(dev));
@@ -158,14 +158,12 @@ static int asm330lhh_resume(struct device *dev)
 	return asm330lhh_common_resume(cdata);
 }
 
-static const struct dev_pm_ops asm330lhh_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(asm330lhh_suspend, asm330lhh_resume)
-};
+static SIMPLE_DEV_PM_OPS(asm330lhh_pm_ops, asm330lhh_suspend, asm330lhh_resume);
 
 #define ASM330LHH_PM_OPS		(&asm330lhh_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define ASM330LHH_PM_OPS		NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct spi_device_id asm330lhh_ids[] = {
 	{ ASM330LHH_DEV_NAME, 0 },

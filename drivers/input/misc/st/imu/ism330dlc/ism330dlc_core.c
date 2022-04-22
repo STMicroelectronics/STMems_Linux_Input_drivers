@@ -1263,7 +1263,7 @@ void ism330dlc_common_remove(struct ism330dlc_data *cdata, int irq)
 }
 EXPORT_SYMBOL(ism330dlc_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int ism330dlc_resume_sensors(struct ism330dlc_sensor_data *sdata)
 {
 	if (!sdata->enabled)
@@ -1298,7 +1298,7 @@ int ism330dlc_common_resume(struct ism330dlc_data *cdata)
 }
 EXPORT_SYMBOL(ism330dlc_common_resume);
 
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("STMicroelectronics ism330dlc driver");
 MODULE_AUTHOR("Giuseppe Barba");

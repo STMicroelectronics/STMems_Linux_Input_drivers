@@ -1305,7 +1305,7 @@ int lsm9ds0_gyr_suspend(struct lsm9ds0_gyr_dev *dev)
 	int err = 0;
 
 #define SLEEP
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 	if (atomic_read(&dev->enabled)) {
 		mutex_lock(&dev->lock);
 
@@ -1320,7 +1320,7 @@ int lsm9ds0_gyr_suspend(struct lsm9ds0_gyr_dev *dev)
 #endif /*SLEEP*/
 		mutex_unlock(&dev->lock);
 	}
-#endif /*CONFIG_PM*/
+#endif /*CONFIG_PM_SLEEP*/
 
 	return err;
 }
@@ -1330,7 +1330,7 @@ int lsm9ds0_gyr_resume(struct lsm9ds0_gyr_dev *dev)
 {
 	int err = 0;
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 	if (atomic_read(&dev->enabled)) {
 		mutex_lock(&dev->lock);
 		if (dev->polling_enabled)
@@ -1346,7 +1346,7 @@ int lsm9ds0_gyr_resume(struct lsm9ds0_gyr_dev *dev)
 		mutex_unlock(&dev->lock);
 
 	}
-#endif /*CONFIG_PM*/
+#endif /*CONFIG_PM_SLEEP*/
 
 	return err;
 }

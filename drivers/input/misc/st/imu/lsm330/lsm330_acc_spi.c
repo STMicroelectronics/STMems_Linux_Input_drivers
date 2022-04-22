@@ -84,8 +84,8 @@ static struct lsm330_transfer_function lsm330_acc_spi_tf = {
 	.read = lsm330_acc_spi_read,
 };
 
-#ifdef CONFIG_PM
-static int lsm330_acc_spi_resume(struct device *device)
+#ifdef CONFIG_PM_SLEEP
+static int lsm330_acc_resume(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct lsm330_acc_data *acc = spi_get_drvdata(spi);
@@ -93,7 +93,7 @@ static int lsm330_acc_spi_resume(struct device *device)
 	return lsm330_acc_enable(acc);
 }
 
-static int lsm330_acc_spi_suspend(struct device *device)
+static int lsm330_acc_suspend(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct lsm330_acc_data *acc = spi_get_drvdata(spi);
@@ -101,11 +101,14 @@ static int lsm330_acc_spi_suspend(struct device *device)
 	return lsm330_acc_disable(acc);
 }
 
-static const struct dev_pm_ops lsm330_acc_spi_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lsm330_acc_spi_suspend,
-				lsm330_acc_spi_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(lsm330_acc_pm_ops,
+				lsm330_acc_suspend,
+				lsm330_acc_resume);
+
+#define LSM330_ACC_PM_OPS		(&lsm330_acc_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define LSM330_ACC_PM_OPS		NULL
+#endif /* CONFIG_PM_SLEEP */
 
 static int lsm330_acc_spi_probe(struct spi_device *spi)
 {
@@ -172,9 +175,7 @@ static struct spi_driver lsm330_acc_spi_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = "lsm330_acc_spi",
-#ifdef CONFIG_PM
-		.pm = &lsm330_acc_spi_pm_ops,
-#endif /* CONFIG_PM */
+		.pm = LSM330_ACC_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = lsm330_acc_spi_id_table,
 #endif /* CONFIG_OF */

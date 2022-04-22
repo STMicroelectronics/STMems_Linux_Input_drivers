@@ -144,7 +144,7 @@ static int lsm6dsm_spi_remove(struct spi_device *spi)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lsm6dsm_suspend(struct device *dev)
 {
 	struct lsm6dsm_data *cdata = spi_get_drvdata(to_spi_device(dev));
@@ -159,14 +159,12 @@ static int lsm6dsm_resume(struct device *dev)
 	return lsm6dsm_common_resume(cdata);
 }
 
-static const struct dev_pm_ops lsm6dsm_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lsm6dsm_suspend, lsm6dsm_resume)
-};
+static SIMPLE_DEV_PM_OPS(lsm6dsm_pm_ops, lsm6dsm_suspend, lsm6dsm_resume);
 
 #define LSM6DSM_PM_OPS		(&lsm6dsm_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define LSM6DSM_PM_OPS		NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct spi_device_id lsm6dsm_ids[] = {
 	{ LSM6DSM_DEV_NAME, 0 },
