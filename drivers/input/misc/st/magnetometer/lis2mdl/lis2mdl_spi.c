@@ -93,8 +93,8 @@ static struct lis2mdl_transfer_function lis2mdl_spi_tf = {
 	.read = lis2mdl_spi_read,
 };
 
-#ifdef CONFIG_PM
-static int lis2mdl_spi_resume(struct device *device)
+#ifdef CONFIG_PM_SLEEP
+static int lis2mdl_resume(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct st_common_data *cdata = spi_get_drvdata(spi);
@@ -102,7 +102,7 @@ static int lis2mdl_spi_resume(struct device *device)
 	return lis2mdl_enable(cdata);
 }
 
-static int lis2mdl_spi_suspend(struct device *device)
+static int lis2mdl_suspend(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct st_common_data *cdata = spi_get_drvdata(spi);
@@ -110,11 +110,12 @@ static int lis2mdl_spi_suspend(struct device *device)
 	return lis2mdl_disable(cdata);
 }
 
-static const struct dev_pm_ops lis2mdl_spi_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lis2mdl_spi_suspend,
-				lis2mdl_spi_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(lis2mdl_pm_ops, lis2mdl_suspend, lis2mdl_resume);
+
+#define LIS2MDL_PM_OPS		(&lis2mdl_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define LIS2MDL_PM_OPS		NULL
+#endif /* CONFIG_PM_SLEEP */
 
 #ifdef CONFIG_OF
 static const struct of_device_id lis2mdl_spi_id_table[] = {
@@ -199,9 +200,7 @@ static struct spi_driver lis2mdl_spi_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = LIS2MDL_DEV_NAME,
-#ifdef CONFIG_PM
-		.pm = &lis2mdl_spi_pm_ops,
-#endif /* CONFIG_PM */
+		.pm = LIS2MDL_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = lis2mdl_spi_id_table,
 #endif /* CONFIG_OF */

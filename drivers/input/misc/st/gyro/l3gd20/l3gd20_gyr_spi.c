@@ -91,8 +91,8 @@ static struct l3gd20_gyr_transfer_function l3gd20_gyr_spi_tf = {
 	.read = l3gd20_gyr_spi_read,
 };
 
-#ifdef CONFIG_PM
-static int l3gd20_gyr_spi_resume(struct device *device)
+#ifdef CONFIG_PM_SLEEP
+static int l3gd20_gyr_if_resume(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct l3gd20_gyr_status *stat = spi_get_drvdata(spi);
@@ -100,7 +100,7 @@ static int l3gd20_gyr_spi_resume(struct device *device)
 	return l3gd20_gyr_resume(stat);
 }
 
-static int l3gd20_gyr_spi_suspend(struct device *device)
+static int l3gd20_gyr_if_suspend(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct l3gd20_gyr_status *stat = spi_get_drvdata(spi);
@@ -108,11 +108,14 @@ static int l3gd20_gyr_spi_suspend(struct device *device)
 	return l3gd20_gyr_suspend(stat);
 }
 
-static const struct dev_pm_ops l3gd20_gyr_spi_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(l3gd20_gyr_spi_suspend,
-				l3gd20_gyr_spi_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(l3gd20_gyr_pm_ops,
+				l3gd20_gyr_if_suspend,
+				l3gd20_gyr_if_resume);
+
+#define L3GD20_PM_OPS	(&l3gd20_gyr_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define L3GD20_PM_OPS	NULL
+#endif /* CONFIG_PM_SLEEP */
 
 static int l3gd20_gyr_spi_probe(struct spi_device *spi)
 {
@@ -180,9 +183,7 @@ static struct spi_driver l3gd20_gyr_spi_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = "l3gd20_gyr_spi",
-#ifdef CONFIG_PM
-		.pm = &l3gd20_gyr_spi_pm_ops,
-#endif /* CONFIG_PM */
+		.pm = L3GD20_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = l3gd20_gyr_spi_id_table,
 #endif /* CONFIG_OF */

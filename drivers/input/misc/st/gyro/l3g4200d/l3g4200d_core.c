@@ -876,7 +876,7 @@ int l3g4200d_common_remove(struct l3g4200d_data *gyro)
 }
 EXPORT_SYMBOL(l3g4200d_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int l3g4200d_common_suspend(struct l3g4200d_data *gyro)
 {
 #ifdef DEBUG
@@ -894,7 +894,7 @@ int l3g4200d_common_resume(struct l3g4200d_data *gyro)
 	return 0;
 }
 EXPORT_SYMBOL(l3g4200d_common_resume);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("l3g4200d digital gyroscope sysfs driver");
 MODULE_AUTHOR("Matteo Dameno, Carmine Iascone, Mario Tesi, STMicroelectronics");

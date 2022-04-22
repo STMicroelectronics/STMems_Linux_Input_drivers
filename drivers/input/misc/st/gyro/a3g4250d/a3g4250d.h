@@ -138,10 +138,10 @@ static inline s64 a3g4250d_get_time_ns(void)
 int a3g4250d_common_probe(struct a3g4250d_data *gyro);
 int a3g4250d_common_remove(struct a3g4250d_data *gyro);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int a3g4250d_common_suspend(struct a3g4250d_data *gyro);
 int a3g4250d_common_resume(struct a3g4250d_data *gyro);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif /* __KERNEL__ */
 

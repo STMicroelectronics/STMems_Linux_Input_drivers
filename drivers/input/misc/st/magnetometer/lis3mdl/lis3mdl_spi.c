@@ -96,7 +96,7 @@ static const struct lis3mdl_transfer_function lis3mdl_spi_tf = {
 	.read = lis3mdl_spi_read,
 };
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lis3mdl_spi_suspend(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
@@ -113,11 +113,14 @@ static int lis3mdl_spi_resume(struct device *device)
 	return lis3mdl_mag_enable(dev);
 }
 
-static const struct dev_pm_ops lis3mdl_spi_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lis3mdl_spi_suspend,
-				lis3mdl_spi_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(lis3mdl_spi_pm_ops,
+				lis3mdl_spi_suspend,
+				lis3mdl_spi_resume);
+
+#define LIS3MDL_PM_OPS		(&lis3mdl_spi_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define LIS3MDL_PM_OPS		NULL
+#endif /* CONFIG_PM_SLEEP */
 
 static int lis3mdl_spi_probe(struct spi_device *spi)
 {
@@ -181,9 +184,7 @@ static struct spi_driver lis3mdl_spi_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = "lis3mdl_spi",
-#ifdef CONFIG_PM
-		.pm = &lis3mdl_spi_pm_ops,
-#endif /* CONFIG_PM */
+		.pm = LIS3MDL_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = lis3mdl_spi_id_table,
 #endif /* CONFIG_OF */

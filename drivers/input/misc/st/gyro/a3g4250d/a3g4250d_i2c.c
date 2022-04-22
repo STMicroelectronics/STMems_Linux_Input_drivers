@@ -124,7 +124,7 @@ static int a3g4250d_i2c_remove(struct i2c_client *client)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int a3g4250d_suspend(struct device *dev)
 {
 	struct a3g4250d_data *cdata = i2c_get_clientdata(to_i2c_client(dev));
@@ -139,14 +139,12 @@ static int a3g4250d_resume(struct device *dev)
 	return a3g4250d_common_resume(cdata);
 }
 
-static const struct dev_pm_ops a3g4250d_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(a3g4250d_suspend, a3g4250d_resume)
-};
+static SIMPLE_DEV_PM_OPS(a3g4250d_pm_ops, a3g4250d_suspend, a3g4250d_resume);
 
 #define A3G4250D_PM_OPS		(&a3g4250d_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define A3G4250D_PM_OPS		NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct i2c_device_id a3g4250d_ids[] = {
 	{ A3G4250D_DEV_NAME, 0 },
@@ -166,9 +164,7 @@ static struct i2c_driver a3g4250d_i2c_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = A3G4250D_DEV_NAME,
-#ifdef CONFIG_PM
 		.pm = A3G4250D_PM_OPS,
-#endif
 #ifdef CONFIG_OF
 		.of_match_table = a3g4250d_id_table,
 #endif
