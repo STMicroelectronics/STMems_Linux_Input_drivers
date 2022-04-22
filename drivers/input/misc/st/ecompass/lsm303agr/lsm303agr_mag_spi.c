@@ -98,8 +98,8 @@ static const struct lsm303agr_transfer_function lsm303agr_mag_spi_tf = {
 	.read = lsm303agr_mag_spi_read,
 };
 
-#ifdef CONFIG_PM
-static int lsm303agr_mag_spi_suspend(struct device *dev)
+#ifdef CONFIG_PM_SLEEP
+static int lsm303agr_mag_suspend(struct device *dev)
 {
 	struct spi_device *spi = to_spi_device(dev);
 	struct lsm303agr_common_data *cdata = spi_get_drvdata(spi);
@@ -108,7 +108,7 @@ static int lsm303agr_mag_spi_suspend(struct device *dev)
 	return lsm303agr_mag_disable(cdata);
 }
 
-static int lsm303agr_mag_spi_resume(struct device *dev)
+static int lsm303agr_mag_resume(struct device *dev)
 {
 	struct spi_device *spi = to_spi_device(dev);
 	struct lsm303agr_common_data *cdata = spi_get_drvdata(spi);
@@ -118,11 +118,14 @@ static int lsm303agr_mag_spi_resume(struct device *dev)
 	return 0;
 }
 
-static const struct dev_pm_ops lsm303agr_mag_spi_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lsm303agr_mag_spi_suspend,
-				lsm303agr_mag_spi_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(lsm303agr_mag_pm_ops,
+				lsm303agr_mag_suspend,
+				lsm303agr_mag_resume);
+
+#define LSM303AGR_MAG_PM_OPS	(&lsm303agr_mag_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define LSM303AGR_MAG_PM_OPS	NULL
+#endif /* CONFIG_PM_SLEEP */
 
 static int lsm303agr_mag_spi_probe(struct spi_device *spi)
 {
@@ -180,9 +183,7 @@ static struct spi_driver lsm303agr_mag_spi_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = "lsm303agr_mag",
-#ifdef CONFIG_PM
-		.pm = &lsm303agr_mag_spi_pm_ops,
-#endif /* CONFIG_PM */
+		.pm = LSM303AGR_MAG_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = lsm303agr_mag_spi_id_table,
 #endif /* CONFIG_OF */

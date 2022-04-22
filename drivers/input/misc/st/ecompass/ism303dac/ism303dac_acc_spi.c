@@ -93,8 +93,8 @@ static struct st_sensor_transfer_function ism303dac_acc_spi_tf = {
 	.read = ism303dac_acc_spi_read,
 };
 
-#ifdef CONFIG_PM
-static int ism303dac_acc_spi_resume(struct device *device)
+#ifdef CONFIG_PM_SLEEP
+static int ism303dac_acc_resume(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct st_common_data *cdata = spi_get_drvdata(spi);
@@ -102,7 +102,7 @@ static int ism303dac_acc_spi_resume(struct device *device)
 	return ism303dac_acc_enable(cdata);
 }
 
-static int ism303dac_acc_spi_suspend(struct device *device)
+static int ism303dac_acc_suspend(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct st_common_data *cdata = spi_get_drvdata(spi);
@@ -110,11 +110,14 @@ static int ism303dac_acc_spi_suspend(struct device *device)
 	return ism303dac_acc_disable(cdata);
 }
 
-static const struct dev_pm_ops ism303dac_acc_spi_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(ism303dac_acc_spi_suspend,
-				ism303dac_acc_spi_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(ism303dac_acc_pm_ops,
+			ism303dac_acc_suspend,
+			ism303dac_acc_resume);
+
+#define ISM303DAC_ACC_PM_OPS	(&ism303dac_acc_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define ISM303DAC_ACC_PM_OPS	NULL
+#endif /* CONFIG_PM_SLEEP */
 
 #ifdef CONFIG_OF
 static const struct of_device_id ism303dac_acc_spi_id_table[] = {
@@ -198,9 +201,7 @@ static struct spi_driver ism303dac_acc_spi_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = "ism303dac_acc_spi",
-#ifdef CONFIG_PM
-		.pm = &ism303dac_acc_spi_pm_ops,
-#endif /* CONFIG_PM */
+		.pm = ISM303DAC_ACC_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = ism303dac_acc_spi_id_table,
 #endif /* CONFIG_OF */

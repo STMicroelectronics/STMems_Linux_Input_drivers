@@ -75,8 +75,8 @@ static struct lsm303dlhc_transfer_function lsm303dlhc_mag_i2c_tf = {
 	.read = lsm303dlhc_mag_i2c_read,
 };
 
-#ifdef CONFIG_PM
-static int lsm303dlhc_mag_i2c_resume(struct device *device)
+#ifdef CONFIG_PM_SLEEP
+static int lsm303dlhc_mag_resume(struct device *device)
 {
 	struct i2c_client *client = to_i2c_client(device);
 	struct lsm303dlhc_mag_status *stat = i2c_get_clientdata(client);
@@ -84,7 +84,7 @@ static int lsm303dlhc_mag_i2c_resume(struct device *device)
 	return lsm303dlhc_mag_enable(stat);
 }
 
-static int lsm303dlhc_mag_i2c_suspend(struct device *device)
+static int lsm303dlhc_mag_suspend(struct device *device)
 {
 	struct i2c_client *client = to_i2c_client(device);
 	struct lsm303dlhc_mag_status *stat = i2c_get_clientdata(client);
@@ -92,11 +92,15 @@ static int lsm303dlhc_mag_i2c_suspend(struct device *device)
 	return lsm303dlhc_mag_disable(stat);
 }
 
-static const struct dev_pm_ops lsm303dlhc_mag_i2c_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lsm303dlhc_mag_i2c_suspend,
-				lsm303dlhc_mag_i2c_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(lsm303dlhc_mag_pm_ops,
+			lsm303dlhc_mag_suspend,
+			lsm303dlhc_mag_resume);
+
+
+#define LSM303DLHC_MAG_PM_OPS	(&lsm303dlhc_mag_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define LSM303DLHC_MAG_PM_OPS	NULL
+#endif /* CONFIG_PM_SLEEP */
 
 #ifdef CONFIG_OF
 static const struct of_device_id lsm303dlhc_mag_i2c_id_table[] = {
@@ -166,9 +170,7 @@ static struct i2c_driver lsm303dlhc_mag_i2c_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = "lsm303dlhc_mag_i2c",
-#ifdef CONFIG_PM
-		.pm = &lsm303dlhc_mag_i2c_pm_ops,
-#endif /* CONFIG_PM */
+		.pm = LSM303DLHC_MAG_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = lsm303dlhc_mag_i2c_id_table,
 #endif /* CONFIG_OF */

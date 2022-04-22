@@ -96,8 +96,8 @@ static struct lsm303d_transfer_function lsm303d_spi_tf = {
 	.read = lsm303d_spi_read,
 };
 
-#ifdef CONFIG_PM
-static int lsm303d_spi_suspend(struct device *device)
+#ifdef CONFIG_PM_SLEEP
+static int lsm303d_suspend(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct lsm303d_dev *dev = spi_get_drvdata(spi);
@@ -105,7 +105,7 @@ static int lsm303d_spi_suspend(struct device *device)
 	return lsm303d_disable(dev);
 }
 
-static int lsm303d_spi_resume(struct device *device)
+static int lsm303d_resume(struct device *device)
 {
 	struct spi_device *spi = to_spi_device(device);
 	struct lsm303d_dev *dev = spi_get_drvdata(spi);
@@ -113,10 +113,12 @@ static int lsm303d_spi_resume(struct device *device)
 	return lsm303d_enable(dev);
 }
 
-static const struct dev_pm_ops lsm303d_spi_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lsm303d_spi_suspend, lsm303d_spi_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(lsm303d_pm_ops, lsm303d_suspend, lsm303d_resume);
+
+#define LSM303D_PM_OPS	(&lsm303d_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define LSM303D_PM_OPS	NULL
+#endif /* CONFIG_PM_SLEEP */
 
 #ifdef CONFIG_OF
 static const struct of_device_id lsm303d_spi_id_table[] = {
@@ -176,9 +178,7 @@ static struct spi_driver lsm303d_spi_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = "lsm303d",
-#ifdef CONFIG_PM
-		.pm = &lsm303d_spi_pm_ops,
-#endif /* CONFIG_PM */
+		.pm = LSM303D_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = lsm303d_spi_id_table,
 #endif /* CONFIG_OF */
