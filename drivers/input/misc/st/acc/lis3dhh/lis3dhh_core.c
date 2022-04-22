@@ -532,7 +532,7 @@ int lis3dhh_common_remove(struct lis3dhh_acc_status *stat)
 }
 EXPORT_SYMBOL(lis3dhh_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis3dhh_common_resume(struct lis3dhh_acc_status *stat)
 {
 	if (stat->on_before_suspend)
@@ -549,7 +549,7 @@ int lis3dhh_common_suspend(struct lis3dhh_acc_status *stat)
 	return lis3dhh_acc_disable(stat);
 }
 EXPORT_SYMBOL(lis3dhh_common_suspend);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("lis3dhh acc driver");
 MODULE_AUTHOR("Mario Tesi, STMicroelectronics");

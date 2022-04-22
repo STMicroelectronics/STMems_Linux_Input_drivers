@@ -151,10 +151,10 @@ struct lis3de_status {
 int lis3de_common_probe(struct lis3de_status *stat);
 int lis3de_common_remove(struct lis3de_status *stat);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis3de_common_resume(struct lis3de_status *stat);
 int lis3de_common_suspend(struct lis3de_status *stat);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif	/* __KERNEL__ */
 

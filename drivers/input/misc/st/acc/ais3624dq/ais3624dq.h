@@ -128,10 +128,10 @@ struct ais3624dq_acc_data {
 
 int ais3624dq_acc_probe(struct ais3624dq_acc_data *acc);
 int ais3624dq_acc_remove(struct ais3624dq_acc_data *acc);
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int ais3624dq_acc_enable(struct ais3624dq_acc_data *acc);
 int ais3624dq_acc_disable(struct ais3624dq_acc_data *acc);
-#endif
+#endif /* CONFIG_PM_SLEEP */
 
 #endif /* __KERNEL__ */
 

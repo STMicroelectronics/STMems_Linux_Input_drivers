@@ -154,10 +154,10 @@ struct lis2dh_acc_status {
 int lis2dh_acc_probe(struct lis2dh_acc_status *stat);
 int lis2dh_acc_remove(struct lis2dh_acc_status *stat);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis2dh_acc_common_resume(struct lis2dh_acc_status *stat);
 int lis2dh_acc_common_suspend(struct lis2dh_acc_status *stat);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif	/* __KERNEL__ */
 

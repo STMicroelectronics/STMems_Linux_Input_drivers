@@ -162,10 +162,10 @@ static inline s64 lis3dh_acc_get_time_ns(void)
 int lis3dh_acc_probe(struct lis3dh_acc_status *stat, int irq);
 int lis3dh_acc_remove(struct lis3dh_acc_status *stat);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis3dh_acc_common_resume(struct lis3dh_acc_status *stat);
 int lis3dh_acc_common_suspend(struct lis3dh_acc_status *stat);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif	/* __KERNEL__ */
 

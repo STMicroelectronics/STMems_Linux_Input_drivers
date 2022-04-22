@@ -130,7 +130,7 @@ static int lis2ds_i2c_remove(struct i2c_client *client)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lis2ds_suspend(struct device *dev)
 {
 	struct lis2ds_data *cdata = i2c_get_clientdata(to_i2c_client(dev));
@@ -145,14 +145,12 @@ static int lis2ds_resume(struct device *dev)
 	return lis2ds_common_resume(cdata);
 }
 
-static const struct dev_pm_ops lis2ds_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lis2ds_suspend, lis2ds_resume)
-};
+static SIMPLE_DEV_PM_OPS(lis2ds_pm_ops, lis2ds_suspend, lis2ds_resume);
 
 #define LIS2DS_PM_OPS	(&lis2ds_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define LIS2DS_PM_OPS	NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 
 static const struct i2c_device_id lis2ds_ids[] = {

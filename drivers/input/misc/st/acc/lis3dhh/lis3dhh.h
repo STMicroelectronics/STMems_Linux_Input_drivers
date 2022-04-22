@@ -91,10 +91,10 @@ struct lis3dhh_acc_status {
 int lis3dhh_common_probe(struct lis3dhh_acc_status *stat);
 int lis3dhh_common_remove(struct lis3dhh_acc_status *stat);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis3dhh_common_resume(struct lis3dhh_acc_status *stat);
 int lis3dhh_common_suspend(struct lis3dhh_acc_status *stat);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif	/* __KERNEL__ */
 

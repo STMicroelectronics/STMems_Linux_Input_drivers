@@ -155,7 +155,7 @@ struct lis3dsh_status {
 #endif
 };
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis3dsh_common_resume(struct lis3dsh_status *acc);
 int lis3dsh_common_suspend(struct lis3dsh_status *acc);
 #endif

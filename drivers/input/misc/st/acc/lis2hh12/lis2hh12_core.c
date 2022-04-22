@@ -1359,7 +1359,7 @@ int lis2hh12_common_remove(struct lis2hh12_status *stat)
 }
 EXPORT_SYMBOL(lis2hh12_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis2hh12_common_resume(struct lis2hh12_status *stat)
 {
 	if (stat->on_before_suspend)
@@ -1376,7 +1376,7 @@ int lis2hh12_common_suspend(struct lis2hh12_status *stat)
 	return lis2hh12_acc_disable(stat);
 }
 EXPORT_SYMBOL(lis2hh12_common_suspend);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("lis2hh12 accelerometer driver");
 MODULE_AUTHOR("Matteo Dameno, Denis Ciocca, Mario Tesi, STMicroelectronics");

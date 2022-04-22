@@ -1265,7 +1265,7 @@ int lis2de_acc_remove(struct lis2de_acc_status *stat)
 }
 EXPORT_SYMBOL(lis2de_acc_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis2de_acc_common_resume(struct lis2de_acc_status *stat)
 {
 	if (stat->on_before_suspend)
@@ -1282,7 +1282,7 @@ int lis2de_acc_common_suspend(struct lis2de_acc_status *stat)
 	return lis2de_acc_disable(stat);
 }
 EXPORT_SYMBOL(lis2de_acc_common_suspend);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("lis2de accelerometer driver");
 MODULE_AUTHOR("Matteo Dameno");

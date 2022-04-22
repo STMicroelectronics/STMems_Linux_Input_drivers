@@ -114,10 +114,10 @@ struct h3lis100dl_data {
 int h3lis100dl_common_probe(struct h3lis100dl_data *acc);
 int h3lis100dl_common_remove(struct h3lis100dl_data *acc);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int h3lis100dl_common_resume(struct h3lis100dl_data *cdata);
 int h3lis100dl_common_suspend(struct h3lis100dl_data *cdata);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif /* __KERNEL__ */
 #endif  /* __H3LIS100DL_H__ */

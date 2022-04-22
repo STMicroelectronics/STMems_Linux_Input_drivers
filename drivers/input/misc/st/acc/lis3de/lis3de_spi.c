@@ -130,7 +130,7 @@ static int lis3de_spi_remove(struct spi_device *spi)
 	return 0;
 }
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lis3de_suspend(struct device *dev)
 {
 	struct lis3de_status *stat= spi_get_drvdata(to_spi_device(dev));
@@ -145,14 +145,12 @@ static int lis3de_resume(struct device *dev)
 	return lis3de_common_resume(stat);
 }
 
-static const struct dev_pm_ops lis3de_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lis3de_suspend, lis3de_resume)
-};
+static SIMPLE_DEV_PM_OPS(lis3de_pm_ops, lis3de_suspend, lis3de_resume);
 
 #define LIS3DE_PM_OPS	(&lis3de_pm_ops)
-#else /* CONFIG_PM */
+#else /* CONFIG_PM_SLEEP */
 #define LIS3DE_PM_OPS	NULL
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 static const struct spi_device_id lis3de_ids[] = {
 	{ LIS3DE_ACC_DEV_NAME, 0 },
@@ -172,9 +170,7 @@ static struct spi_driver lis3de_spi_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = LIS3DE_ACC_DEV_NAME,
-#ifdef CONFIG_PM
 		.pm = LIS3DE_PM_OPS,
-#endif
 #ifdef CONFIG_OF
 		.of_match_table = lis3de_id_table,
 #endif

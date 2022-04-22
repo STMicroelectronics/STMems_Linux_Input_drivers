@@ -160,10 +160,10 @@ struct lis2de_acc_status {
 int lis2de_acc_probe(struct lis2de_acc_status *stat);
 int lis2de_acc_remove(struct lis2de_acc_status *stat);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int lis2de_acc_common_resume(struct lis2de_acc_status *stat);
 int lis2de_acc_common_suspend(struct lis2de_acc_status *stat);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif	/* __KERNEL__ */
 

@@ -1551,7 +1551,7 @@ void lis2ds_common_remove(struct lis2ds_data *cdata, int irq)
 }
 EXPORT_SYMBOL(lis2ds_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lis2ds_resume_sensors(struct lis2ds_sensor_data *sdata)
 {
 	if (!sdata->enabled)
@@ -1584,7 +1584,7 @@ int lis2ds_common_resume(struct lis2ds_data *cdata)
 }
 EXPORT_SYMBOL(lis2ds_common_resume);
 
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("STMicroelectronics lis2ds driver");
 MODULE_AUTHOR("Giuseppe Barba");

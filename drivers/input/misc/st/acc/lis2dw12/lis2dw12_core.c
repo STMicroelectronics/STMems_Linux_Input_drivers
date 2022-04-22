@@ -1268,7 +1268,7 @@ void lis2dw12_common_remove(struct lis2dw12_data *cdata, int irq)
 }
 EXPORT_SYMBOL(lis2dw12_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 static int lis2dw12_resume_sensors(struct lis2dw12_sensor_data *sdata)
 {
 	if (!sdata->enabled)
@@ -1303,7 +1303,7 @@ int lis2dw12_common_resume(struct lis2dw12_data *cdata)
 }
 EXPORT_SYMBOL(lis2dw12_common_resume);
 
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("STMicroelectronics lis2dw12 driver");
 MODULE_AUTHOR("Giuseppe Barba");
