@@ -129,10 +129,10 @@ struct l3g4200d_data {
 int l3g4200d_common_probe(struct l3g4200d_data *gyro);
 int l3g4200d_common_remove(struct l3g4200d_data *gyro);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int l3g4200d_common_suspend(struct l3g4200d_data *gyro);
 int l3g4200d_common_resume(struct l3g4200d_data *gyro);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 #endif /* __KERNEL__ */
 

@@ -815,7 +815,7 @@ int a3g4250d_common_remove(struct a3g4250d_data *gyro)
 }
 EXPORT_SYMBOL(a3g4250d_common_remove);
 
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 int a3g4250d_common_suspend(struct a3g4250d_data *gyro)
 {
 	if (atomic_read(&gyro->enabled))
@@ -833,7 +833,7 @@ int a3g4250d_common_resume(struct a3g4250d_data *gyro)
 	return 0;
 }
 EXPORT_SYMBOL(a3g4250d_common_resume);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("a3g4250d digital gyro driver");
 MODULE_AUTHOR("Matteo Dameno, Carmine Iascone, Mario Tesi, STMicroelectronics");

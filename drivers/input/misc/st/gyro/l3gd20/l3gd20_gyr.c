@@ -1448,7 +1448,7 @@ int l3gd20_gyr_suspend(struct l3gd20_gyr_status *stat)
 {
 	int err = 0;
 #define SLEEP
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 	u8 buf[2];
 
 	if (atomic_read(&stat->enabled)) {
@@ -1466,7 +1466,7 @@ int l3gd20_gyr_suspend(struct l3gd20_gyr_status *stat)
 #endif /*SLEEP*/
 		mutex_unlock(&stat->lock);
 	}
-#endif /*CONFIG_PM*/
+#endif /* CONFIG_PM_SLEEP */
 	return (err < 0) ? err : 0;
 }
 EXPORT_SYMBOL(l3gd20_gyr_suspend);
@@ -1474,7 +1474,7 @@ EXPORT_SYMBOL(l3gd20_gyr_suspend);
 int l3gd20_gyr_resume(struct l3gd20_gyr_status *stat)
 {
 	int err = 0;
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM_SLEEP
 	u8 buf[2];
 
 	if (atomic_read(&stat->enabled)) {
@@ -1493,7 +1493,7 @@ int l3gd20_gyr_resume(struct l3gd20_gyr_status *stat)
 		mutex_unlock(&stat->lock);
 
 	}
-#endif /*CONFIG_PM*/
+#endif /* CONFIG_PM_SLEEP */
 	return (err < 0) ? err : 0;
 }
 EXPORT_SYMBOL(l3gd20_gyr_resume);

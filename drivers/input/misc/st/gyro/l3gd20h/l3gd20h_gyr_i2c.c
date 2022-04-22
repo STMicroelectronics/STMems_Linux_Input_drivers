@@ -74,8 +74,8 @@ static struct l3gd20h_gyr_transfer_function l3gd20h_gyr_i2c_tf = {
 	.read = l3gd20h_gyr_i2c_read,
 };
 
-#ifdef CONFIG_PM
-static int l3gd20h_gyr_i2c_resume(struct device *device)
+#ifdef CONFIG_PM_SLEEP
+static int l3gd20h_gyr_if_resume(struct device *device)
 {
 	struct i2c_client *client = to_i2c_client(device);
 	struct l3gd20h_gyr_status *stat = i2c_get_clientdata(client);
@@ -83,7 +83,7 @@ static int l3gd20h_gyr_i2c_resume(struct device *device)
 	return l3gd20h_gyr_resume(stat);
 }
 
-static int l3gd20h_gyr_i2c_suspend(struct device *device)
+static int l3gd20h_gyr_if_suspend(struct device *device)
 {
 	struct i2c_client *client = to_i2c_client(device);
 	struct l3gd20h_gyr_status *stat = i2c_get_clientdata(client);
@@ -91,11 +91,14 @@ static int l3gd20h_gyr_i2c_suspend(struct device *device)
 	return l3gd20h_gyr_suspend(stat);
 }
 
-static const struct dev_pm_ops l3gd20h_gyr_i2c_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(l3gd20h_gyr_i2c_suspend,
-				l3gd20h_gyr_i2c_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(l3gd20h_gyr_pm_ops,
+				l3gd20h_gyr_if_suspend,
+				l3gd20h_gyr_if_resume);
+
+#define L3GD20H_PM_OPS	(&l3gd20h_gyr_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define L3GD20H_PM_OPS	NULL
+#endif /* CONFIG_PM_SLEEP */
 
 static int l3gd20h_gyr_i2c_probe(struct i2c_client *client,
 				 const struct i2c_device_id *id)
@@ -165,9 +168,7 @@ static struct i2c_driver l3gd20h_gyr_i2c_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = "l3gd20h_gyr_i2c",
-#ifdef CONFIG_PM
-		.pm = &l3gd20h_gyr_i2c_pm_ops,
-#endif /* CONFIG_PM */
+		.pm = L3GD20H_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = l3gd20h_gyr_i2c_id_table,
 #endif /* CONFIG_OF */
