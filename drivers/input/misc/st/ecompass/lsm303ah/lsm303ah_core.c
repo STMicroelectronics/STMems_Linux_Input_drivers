@@ -278,7 +278,7 @@ void st_sensor_common_remove(struct st_common_data *cdata)
 }
 EXPORT_SYMBOL(st_sensor_common_remove);
 
-#if defined(CONFIG_PM)
+#if defined(CONFIG_PM_SLEEP)
 int st_sensor_common_suspend(struct st_common_data *cdata)
 {
 	return 0;
@@ -290,7 +290,7 @@ int st_sensor_common_resume(struct st_common_data *cdata)
 	return 0;
 }
 EXPORT_SYMBOL(st_sensor_common_resume);
-#endif /* CONFIG_PM */
+#endif /* CONFIG_PM_SLEEP */
 
 MODULE_DESCRIPTION("lsm303ah_core driver");
 MODULE_AUTHOR("Giuseppe Barba <giuseppe.barba@st.com>");

@@ -66,8 +66,8 @@ static struct lsm303c_transfer_function lsm303c_acc_i2c_tf = {
 	.read = lsm303c_acc_i2c_read,
 };
 
-#ifdef CONFIG_PM
-static int lsm303c_acc_i2c_resume(struct device *device)
+#ifdef CONFIG_PM_SLEEP
+static int lsm303c_acc_resume(struct device *device)
 {
 	struct i2c_client *client = to_i2c_client(device);
 	struct lsm303c_acc_dev *dev = i2c_get_clientdata(client);
@@ -75,7 +75,7 @@ static int lsm303c_acc_i2c_resume(struct device *device)
 	return lsm303c_acc_enable(dev);
 }
 
-static int lsm303c_acc_i2c_suspend(struct device *device)
+static int lsm303c_acc_suspend(struct device *device)
 {
 	struct i2c_client *client = to_i2c_client(device);
 	struct lsm303c_acc_dev *dev = i2c_get_clientdata(client);
@@ -83,11 +83,14 @@ static int lsm303c_acc_i2c_suspend(struct device *device)
 	return lsm303c_acc_disable(dev);
 }
 
-static const struct dev_pm_ops lsm303c_acc_i2c_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(lsm303c_acc_i2c_suspend,
-				lsm303c_acc_i2c_resume)
-};
-#endif /* CONFIG_PM */
+static SIMPLE_DEV_PM_OPS(lsm303c_acc_pm_ops,
+			lsm303c_acc_suspend,
+			lsm303c_acc_resume);
+
+#define LSM303C_ACC_PM_OPS	(&lsm303c_acc_pm_ops)
+#else /* CONFIG_PM_SLEEP */
+#define LSM303C_ACC_PM_OPS	NULL
+#endif /* CONFIG_PM_SLEEP */
 
 static int lsm303c_acc_i2c_probe(struct i2c_client *client,
 				     const struct i2c_device_id *id)
@@ -157,9 +160,7 @@ static struct i2c_driver lsm303c_acc_i2c_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
 		.name = "lsm303c_acc_i2c",
-#ifdef CONFIG_PM
-		.pm = &lsm303c_acc_i2c_pm_ops,
-#endif /* CONFIG_PM */
+		.pm = LSM303C_ACC_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = lsm303c_acc_i2c_id_table,
 #endif /* CONFIG_OF */
