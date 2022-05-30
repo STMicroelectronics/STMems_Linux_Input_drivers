@@ -1,0 +1,9 @@
+config INPUT_STTS22H
+         tristate "STM STTS22H sensor"
+         depends on I2C && SYSFS
+         help
+           This driver support the STMicroelectronics STTS22H temperature sensor.
+
+	   To compile this driver as a module, choose M here. The module
+	   will be called stts22h.
+
