@@ -3,7 +3,7 @@
  *
  * Copyright 2017 STMicroelectronics Inc.
  *
- * Mario Tesi <giuseppe.barba@st.com>
+ * Mario Tesi <mario.tesi@st.com>
  * v 1.0
  * Licensed under the GPL-2.
  */
@@ -13,6 +13,7 @@
 
 #define ASM330LHH_DEV_NAME		"asm330lhh"
 #define LSM6DSR_DEV_NAME		"lsm6dsr"
+#define ISM330DHCX_DEV_NAME		"ism330dhcx"
 
 #define HZ_TO_PERIOD_NSEC(hz)		(1000 * 1000 * 1000 / ((u32)(hz)))
 #define MS_TO_US(x)			({ typeof(x) _x = (x); ((_x) * \

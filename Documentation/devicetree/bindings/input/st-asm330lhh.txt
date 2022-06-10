@@ -4,6 +4,7 @@ Required properties for all bus drivers:
 - compatible: must be one of:
               "st,asm330lhh"
               "st,lsm6dsr"
+              "st,ism330dhcx"
 
 Optional properties for all bus drivers (more details reported in
 Documentation/devicetree/bindings/interrupt-controller/interrupts.txt):
