@@ -4,7 +4,8 @@ config INPUT_ASM330LHH
 	select INPUT_ASM330LHH_I2C if (I2C)
 	select INPUT_ASM330LHH_SPI if (SPI)
 	help
-	   This driver support the STMicroelectronics ASM330LHH sensor.
+	   This driver support the STMicroelectronics ASM330LHH, LSM6DSR IMU
+	   sensors.
 
 	   To compile this driver as a module, choose M here. The module
 	   will be called asm330lhh.

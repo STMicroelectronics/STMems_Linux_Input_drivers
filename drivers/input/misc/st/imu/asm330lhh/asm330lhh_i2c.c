@@ -138,13 +138,15 @@ static SIMPLE_DEV_PM_OPS(asm330lhh_pm_ops, asm330lhh_suspend, asm330lhh_resume);
 
 static const struct i2c_device_id asm330lhh_ids[] = {
 	{ ASM330LHH_DEV_NAME, 0 },
+	{ LSM6DSR_DEV_NAME, 1 },
 	{ }
 };
 MODULE_DEVICE_TABLE(i2c, asm330lhh_ids);
 
 #ifdef CONFIG_OF
 static const struct of_device_id asm330lhh_id_table[] = {
-	{ .compatible = "st,asm330lhh", },
+	{ .compatible = "st," ASM330LHH_DEV_NAME, },
+	{ .compatible = "st," LSM6DSR_DEV_NAME, },
 	{ },
 };
 MODULE_DEVICE_TABLE(of, asm330lhh_id_table);

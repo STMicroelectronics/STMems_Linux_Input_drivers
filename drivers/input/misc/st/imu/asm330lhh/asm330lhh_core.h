@@ -12,6 +12,7 @@
 #define DRIVERS_INPUT_MISC_ASM330LHH_CORE_H_
 
 #define ASM330LHH_DEV_NAME		"asm330lhh"
+#define LSM6DSR_DEV_NAME		"lsm6dsr"
 
 #define HZ_TO_PERIOD_NSEC(hz)		(1000 * 1000 * 1000 / ((u32)(hz)))
 #define MS_TO_US(x)			({ typeof(x) _x = (x); ((_x) * \
