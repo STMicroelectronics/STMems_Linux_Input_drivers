@@ -50,7 +50,7 @@ This repository contains Linux kernel (v3.10, v3.4) with STMicroelectronics MEMS
 
 ### Temperature:
 
-> STTS751
+> STTS751, STTS22H
 
 
 Data collected by STM sensors are pushed to userland through the Linux kernel Input framework using *EV_MSC* events. User space applications can get sensor events by reading the related input device created in the /dev directory. Please see [Input][1] for more information.
