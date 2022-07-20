@@ -30,6 +30,10 @@
 /* 5ms is poll rate for 200Hz */
 #define LPS22HH_MIN_POLL_PERIOD_MS	5
 #define	LPS22HH_DEV_NAME		"lps22hh"
+#define	LPS22CH_DEV_NAME		"lps22ch"
+#define	LPS27HHW_DEV_NAME		"lps27hhw"
+#define	LPS27HHTW_DEV_NAME		"lps27hhtw"
+
 
 #define LPS22HH_RX_MAX_LENGTH		64
 #define LPS22HH_TX_MAX_LENGTH		64

@@ -1,10 +1,11 @@
 config INPUT_LPS22HH
-	tristate "STMicroelectronics LPS22HH sensor"
+	tristate "STMicroelectronics LPS22HH/LPS22CH/LPS27HHW/LPS27HHTW sensor"
 	depends on (I2C || SPI) && SYSFS
 	select INPUT_LPS22HH_I2C if (I2C)
 	select INPUT_LPS22HH_SPI if (SPI)
 	help
-	   This driver support the STMicroelectronics LPS22HH sensor.
+	   This driver support the STMicroelectronics LPS22HH, LPS22CH,
+	   LPS27HHW, LPS27HHTW sensors.
 
 	   To compile this driver as a module, choose M here. The module
 	   will be called lps22hh.

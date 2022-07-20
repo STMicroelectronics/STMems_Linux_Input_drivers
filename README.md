@@ -41,8 +41,8 @@ This repository contains Linux kernel (v4.19, v3.10, v3.4) with STMicroelectroni
 
 ### Pressure:
 
-> LPS22HB, LPS22HD, LPS25H, LPS25HB, LPS33HW, LPS35HW, LPS22HH,
-> LPS22DF
+> LPS22CH, LPS22HB, LPS22HD, LPS22HH, LPS22DF, LPS25H, LPS25HB,
+> LPS27HHW, LPS27HHTW, LPS33HW, LPS35HW
 
 ### Ultraviolet:
 

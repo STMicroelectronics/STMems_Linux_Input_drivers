@@ -136,6 +136,9 @@ static SIMPLE_DEV_PM_OPS(lps22hh_pm_ops, lps22hh_suspend, lps22hh_resume);
 
 static const struct i2c_device_id lps22hh_ids[] = {
 	{ LPS22HH_DEV_NAME },
+	{ LPS22CH_DEV_NAME },
+	{ LPS27HHW_DEV_NAME },
+	{ LPS27HHTW_DEV_NAME },
 	{}
 };
 MODULE_DEVICE_TABLE(i2c, lps22hh_ids);
@@ -146,6 +149,18 @@ static const struct of_device_id lps22hh_id_table[] = {
 		.compatible = "st,lps22hh",
 		.data = LPS22HH_DEV_NAME,
 	},
+	{
+		.compatible = "st,lps22ch",
+		.data = LPS22CH_DEV_NAME,
+	},
+	{
+		.compatible = "st,lps27hhw",
+		.data = LPS27HHW_DEV_NAME,
+	},
+	{
+		.compatible = "st,lps27hhtw",
+		.data = LPS27HHTW_DEV_NAME,
+	},
 	{},
 };
 MODULE_DEVICE_TABLE(of, lps22hh_id_table);
@@ -154,7 +169,7 @@ MODULE_DEVICE_TABLE(of, lps22hh_id_table);
 static struct i2c_driver lps22hh_i2c_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
-		.name = LPS22HH_DEV_NAME,
+		.name = "st_lps22hh_i2c_input_drv",
 		.pm = LPS22HH_PM_OPS,
 #ifdef CONFIG_OF
 		.of_match_table = of_match_ptr(lps22hh_id_table),
