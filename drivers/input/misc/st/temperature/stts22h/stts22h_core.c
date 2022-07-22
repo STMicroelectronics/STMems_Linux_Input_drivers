@@ -34,11 +34,7 @@ static const struct {
 
 static inline s64 stts22h_get_time_ns(void)
 {
-	struct timespec ts;
-
-	ktime_get_real_ts(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 static int stts22h_check_whoami(struct stts22h_sensor *sensor)

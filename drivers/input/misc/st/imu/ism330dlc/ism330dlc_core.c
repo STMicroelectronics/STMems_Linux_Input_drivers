@@ -235,11 +235,7 @@ static inline void ism330dlc_flush_works(void)
 
 static inline int64_t ism330dlc_get_time_ns(void)
 {
-	struct timespec ts;
-
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 static int ism330dlc_write_data_with_mask(struct ism330dlc_data *cdata,

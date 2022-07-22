@@ -269,11 +269,7 @@ static inline void lsm6dsm_flush_works(void)
 
 static inline int64_t lsm6dsm_get_time_ns(void)
 {
-	struct timespec ts;
-
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 static int lsm6dsm_write_data_with_mask(struct lsm6dsm_data *cdata,

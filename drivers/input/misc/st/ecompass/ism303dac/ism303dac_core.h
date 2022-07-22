@@ -142,14 +142,7 @@ struct st_common_data {
 };
 
 static inline s64 st_sensor_get_time_ns(void) {
-	struct timespec ts;
-	/*
-	 * calls getnstimeofday.
-	 * If hrtimers then up to ns accurate, if not microsecond.
-	 */
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 enum hrtimer_restart st_ism303dac_sensor_poll_function(struct hrtimer *timer);

@@ -437,14 +437,7 @@ static struct lis2ds_fs_table {
 
 static inline s64 lis2ds_get_time_ns(void)
 {
-	struct timespec ts;
-	/*
-	 * calls getnstimeofday.
-	 * If hrtimers then up to ns accurate, if not microsecond.
-	 */
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 static int lis2ds_write_data_with_mask(struct lis2ds_data *cdata,

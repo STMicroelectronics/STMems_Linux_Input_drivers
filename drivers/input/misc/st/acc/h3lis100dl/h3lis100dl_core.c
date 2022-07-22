@@ -114,11 +114,7 @@ static struct {
 
 static inline int64_t h3lis100dl_get_time_ns(void)
 {
-	struct timespec ts;
-
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 static struct workqueue_struct *h3lis100dl_workqueue;

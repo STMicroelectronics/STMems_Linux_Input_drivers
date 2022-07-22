@@ -142,11 +142,7 @@ struct {
 
 static inline int64_t lis3mdl_get_time_ns(void)
 {
-	struct timespec ts;
-
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 static int lis3mdl_write_data_with_mask(struct lis3mdl_dev *dev,

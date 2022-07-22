@@ -296,11 +296,7 @@ static inline void asm330lhh_flush_works(void)
 
 static inline int64_t asm330lhh_get_time_ns(void)
 {
-	struct timespec ts;
-
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 static int asm330lhh_write_data_with_mask(struct asm330lhh_data *cdata,

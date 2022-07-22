@@ -265,15 +265,7 @@ struct lsm9ds1_acc_gyr_main_platform_data {
 
 static inline s64 lsm9ds1_get_time_ns(void)
 {
-	struct timespec ts;
-
-	/*
-	 * calls getnstimeofday.
-	 * If hrtimers then up to ns accurate, if not microsecond.
-	 */
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 int lsm9ds1_acc_gyr_probe(struct lsm9ds1_acc_gyr_dev *dev, int irq);

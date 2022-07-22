@@ -490,11 +490,7 @@ static int l3gd20_gyr_update_odr(struct l3gd20_gyr_status *stat,
 
 static inline int64_t l3gd20_gyr_get_time_ns(void)
 {
-	struct timespec ts;
-
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 /* gyroscope data readout */

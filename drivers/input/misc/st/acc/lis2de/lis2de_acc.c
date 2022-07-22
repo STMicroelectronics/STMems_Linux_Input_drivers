@@ -914,11 +914,7 @@ static int remove_sysfs_interfaces(struct device *dev)
 
 static inline int64_t lis2de_acc_get_time_ns(void)
 {
-	struct timespec ts;
-
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 static void lis2de_acc_input_work_func(struct work_struct *work)

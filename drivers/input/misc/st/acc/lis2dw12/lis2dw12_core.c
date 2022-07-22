@@ -515,11 +515,7 @@ static int lis2dw12_set_fs(struct lis2dw12_sensor_data *sdata, unsigned int fs)
 
 static inline int64_t lis2dw12_get_time_ns(void)
 {
-	struct timespec ts;
-
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 /* Acc data */

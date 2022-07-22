@@ -417,11 +417,7 @@ static int lis2dh_acc_register_write(struct lis2dh_acc_status *stat,
 
 static inline int64_t lis2dh_acc_get_time_ns(void)
 {
-	struct timespec ts;
-
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 static enum hrtimer_restart lis2dh_acc_poll_function_read(struct hrtimer *timer)

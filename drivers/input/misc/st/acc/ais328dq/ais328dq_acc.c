@@ -147,15 +147,7 @@ static struct ais328dq_acc_platform_data def_pdata = {
 
 static inline s64 ais328dq_get_time_ns(void)
 {
-	struct timespec ts;
-
-	/*
-	 * calls getnstimeofday.
-	 * If hrtimers then up to ns accurate, if not microsecond.
-	 */
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 static int ais328dq_acc_hw_init(struct ais328dq_acc_data *acc)

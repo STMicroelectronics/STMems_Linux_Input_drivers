@@ -63,11 +63,7 @@
 
 static inline int64_t lis3dhh_acc_get_time_ns(void)
 {
-	struct timespec ts;
-
-	get_monotonic_boottime(&ts);
-
-	return timespec_to_ns(&ts);
+	return ktime_to_ns(ktime_get_boottime());
 }
 
 static int lis3dhh_acc_hw_init(struct lis3dhh_acc_status *stat)
