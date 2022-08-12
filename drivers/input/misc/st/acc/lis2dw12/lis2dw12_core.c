@@ -1272,7 +1272,6 @@ static int lis2dw12_resume_sensors(struct lis2dw12_sensor_data *sdata)
 
 	return _lis2dw12_enable_sensors(sdata);
 }
-EXPORT_SYMBOL(lis2dw12_resume_sensors);
 
 static int lis2dw12_suspend_sensors(struct lis2dw12_sensor_data *sdata)
 {
@@ -1281,7 +1280,6 @@ static int lis2dw12_suspend_sensors(struct lis2dw12_sensor_data *sdata)
 
 	return _lis2dw12_disable_sensors(sdata);
 }
-EXPORT_SYMBOL(lis2dw12_suspend_sensors);
 
 int lis2dw12_common_suspend(struct lis2dw12_data *cdata)
 {
