@@ -12,7 +12,7 @@
 #ifndef _STTS22H_H_
 #define _STTS22H_H_
 
-#include <linux/bitfield.h>
+#include <linux/bitops.h>
 #include <linux/device.h>
 #include <linux/module.h>
 
