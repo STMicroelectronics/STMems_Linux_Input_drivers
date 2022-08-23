@@ -23,7 +23,7 @@
 #include <linux/kernel.h>
 #include <linux/version.h>
 #include <linux/pm.h>
-#include <linux/unaligned/access_ok.h>
+#include <asm-generic/unaligned.h>
 
 #include "lps22df.h"
 
