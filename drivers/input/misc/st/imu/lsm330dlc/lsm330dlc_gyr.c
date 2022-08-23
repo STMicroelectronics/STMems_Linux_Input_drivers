@@ -49,7 +49,7 @@
 *******************************************************************************/
 
 #include <linux/mutex.h>
-#include <linux/input-polldev.h>
+#include <linux/input.h>
 #include <linux/interrupt.h>
 #include <linux/gpio.h>
 #include <linux/slab.h>

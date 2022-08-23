@@ -31,7 +31,6 @@
 *******************************************************************************/
 
 #include <linux/mutex.h>
-#include <linux/input-polldev.h>
 #include <linux/version.h>
 #include <linux/err.h>
 #include <linux/errno.h>

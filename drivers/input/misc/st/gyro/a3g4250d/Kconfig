@@ -3,7 +3,6 @@ config INPUT_A3G4250D
 	depends on (I2C || SPI) && SYSFS
 	select INPUT_A3G4250D_I2C if (I2C)
 	select INPUT_A3G4250D_SPI if (SPI)
-	select INPUT_POLLDEV
 	help
 	   This driver support the STMicroelectronics A3G4250D sensor.
 
