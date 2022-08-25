@@ -21,13 +21,13 @@
 
 
 /* RESUME STATE INDICES */
-enum {
+enum resume_entries {
 	RES_CTRL_REG1 = 0,
 	RES_CTRL_REG2,
 	RES_CTRL_REG3,
 	RES_CTRL_REG4,
 	RESUME_ENTRIES
-} resume_entries;
+};
 
 struct lps22df_prs_data;
 
