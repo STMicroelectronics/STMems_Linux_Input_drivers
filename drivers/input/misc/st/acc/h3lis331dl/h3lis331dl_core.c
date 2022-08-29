@@ -43,6 +43,7 @@
 #include <linux/slab.h>
 #include <linux/module.h>
 #include <linux/moduleparam.h>
+#include <linux/of.h>
 
 #include "h3lis331dl.h"
 
