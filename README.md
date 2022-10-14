@@ -1,3 +1,15 @@
+Important Notice
+==================
+
+DISCONTINUED (October 2022): the maintenance for this repository has been discontinued.
+
+Please refer to:
+
+https://github.com/STMicroelectronics/st-mems-android-linux-drivers-input
+
+for the up-to-date drivers' repository.
+
+
 Index
 =======
 	* Introduction
